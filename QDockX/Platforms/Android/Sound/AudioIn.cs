@@ -29,6 +29,11 @@ namespace QDockX.Sound
             int minBufferSize = AudioRecord.GetMinBufferSize(44100, ChannelIn.Mono, Android.Media.Encoding.Pcm16bit);
             int reqBufferSize = (int)(88200.0 / Data.Instance.Latency.Value);
             bufferSize = Math.Min(44100, Math.Max(minBufferSize, reqBufferSize));
+            if((bufferSize & 3) != 0)
+            {
+                bufferSize &= 0x7ffffffc;
+                bufferSize += 4;
+            }
             capture = new(AudioSource.Mic, 44100, ChannelIn.Mono, Android.Media.Encoding.Pcm16bit, bufferSize);
             if(capture.State == State.Initialized)
                 Task.Run(Capture);            
@@ -41,7 +46,7 @@ namespace QDockX.Sound
             {
                 byte[] b = new byte[bufferSize];
                 int br = capture.Read(b, 0, b.Length);
-                SoundProcessor.HalfRatePCM16(b, br, boost);
+                SoundProcessor.HalfRateAndAmplifyPCM16(b, br, boost);
                 MessageHub.Send("AudioOut", (b, br >> 1));
             }
         }
