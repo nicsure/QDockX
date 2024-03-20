@@ -35,18 +35,9 @@ namespace QDockX.Sound
             }
         }
 
-        private static byte[] AmplifyPCM16(byte[] b, int len, double gain)
-        {
-            for (int i = 0; i < len; i += 2)
-            {
-                BitConverter.GetBytes((short)(BitConverter.ToInt16(b, i) * gain)).CopyTo(b, i);
-            }
-            return b;
-        }
-
         private void Capture_DataAvailable(object sender, WaveInEventArgs e)
         {
-            MessageHub.Send("AudioOut", (AmplifyPCM16(e.Buffer, e.BytesRecorded, boost), e.BytesRecorded));
+            MessageHub.Send("AudioOut", (SoundProcessor.AmplifyPCM16(e.Buffer, e.BytesRecorded, boost), e.BytesRecorded));
         }
 
         public void Gain(double gain)

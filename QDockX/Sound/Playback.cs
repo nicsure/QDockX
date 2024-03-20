@@ -17,9 +17,14 @@ namespace QDockX.Sound
         public static void Init()
         {
             player = new AudioOut();
-            player.Init();
+            player.Gain(Data.Instance.Volume.Value);
+            Data.Instance.Volume.PropertyChanged += Volume_PropertyChanged;
+            player.Init();            
+        }
 
-            
+        private static void Volume_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            player?.Gain(Data.Instance.Volume.Value);
         }
 
         public static void Gain(double gain)

@@ -35,6 +35,8 @@ namespace QDockX.Context
         public ViewModel<int> MediumHeight { get; } = new(0, nameof(Latency));
         public ViewModel<int> LargeWidth { get; } = new(190, nameof(Latency));
         public ViewModel<int> LargeHeight { get; } = new(12, nameof(Latency));
+        public ViewModel<double> Volume { get; } = new(0.5, nameof(Volume));
+        public ViewModel<double> Boost { get; } = new(0.5, nameof(Boost));
         public IList<string> Languages
         {
             get => Lang.Available;

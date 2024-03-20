@@ -17,6 +17,7 @@ namespace QDockX.Network
         private static TcpClient serial = null, audio = null;
         private static NetworkStream serialStream = null, audioStream = null;
         private static Task audioWriteTask = null, serialWriteTask = null;
+        private static bool ready = false;
 
         public static void Init()
         {
@@ -51,6 +52,7 @@ namespace QDockX.Network
                     {
                         using Task serialPump = Pump(serialStream, "SerialIn");
                         using Task audioPump = Pump(audioStream, "AudioIn");
+                        ready = true;
                         await serialPump;
                         await audioPump;
                     }
@@ -92,6 +94,7 @@ namespace QDockX.Network
             switch(e.Message)
             {
                 case "AudioOut":
+                    if(ready)
                     {
                         if (audioWriteTask?.IsCompleted ?? true)
                         {
@@ -110,6 +113,7 @@ namespace QDockX.Network
                     }
                     break;
                 case "SerialOut":
+                    if(ready)
                     {
                         serialWriteTask?.Wait(5000);
                         if (!(serialWriteTask?.IsCompleted ?? true))
@@ -135,6 +139,7 @@ namespace QDockX.Network
 
         public static void Close()
         {
+            ready = false;
             try { (_ = serialStream)?.Close(); } catch { }
             try { (_ = audioStream)?.Close(); } catch { }
             try { (_ = serial)?.Close(); } catch { }

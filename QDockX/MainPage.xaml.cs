@@ -18,9 +18,9 @@ public partial class MainPage : ContentPage
 		InitializeComponent();
         Watchdog.Init();
         ButtonProcesor.Init();
-        QDNH.Init();
         Playback.Init();
         Capture.Init();
+        QDNH.Init();
         Serial.Init();
     }
 

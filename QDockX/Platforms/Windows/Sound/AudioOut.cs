@@ -16,6 +16,7 @@ namespace QDockX.Sound
         private WasapiOut play = null;
         private readonly BufferedWaveProvider provider = new(new(22050, 16, 1));
         private double latencySecs = 0.2;
+        private float volume = 0.5f;
 
         public void Init()
         {
@@ -39,6 +40,7 @@ namespace QDockX.Sound
                 {
                     play = new(AudioClientShareMode.Shared, Data.Instance.Latency.Value);
                     play.Init(provider);
+                    play.Volume = volume;
                     play.Play();
                 }
                 catch (Exception ex)
@@ -62,8 +64,9 @@ namespace QDockX.Sound
 
         public void Gain(double gain)
         {
+            volume = (float)gain;
             if (play is WasapiOut wout)
-                wout.Volume = (float)gain;
+                wout.Volume = volume;
         }
     }
 }

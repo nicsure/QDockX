@@ -17,10 +17,12 @@ namespace QDockX.Sound
         private AudioTrack track = null;
         private int bufferSize, bufferFrames, lag;
         private Task lastTask = Task.Run(() => { });
+        private float volume = 0.5f;
 
         public void Gain(double gain)
         {
-
+            volume = (float)gain;
+            track?.SetVolume(volume);
         }
 
         public void Init()
@@ -37,22 +39,23 @@ namespace QDockX.Sound
                 .SetChannelMask(ChannelOut.Mono);
             if (Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
             {
+#pragma warning disable CA1416
                 AudioTrack.Builder atbuilder = new AudioTrack.Builder()
                     .SetPerformanceMode(AudioTrackPerformanceMode.LowLatency)
+#pragma warning restore CA1416
                     .SetAudioFormat(afbuilder.Build())
                     .SetAudioAttributes(aabuilder.Build())
                     .SetTransferMode(AudioTrackMode.Stream)
                     .SetBufferSizeInBytes(bufferSize)
                     .SetSessionId(AudioManager.AudioSessionIdGenerate);
                 track = atbuilder.Build();
-                DebugLog.Out("OREO YAYAYAYAYAYAY!");
             }
             else
             {
-                DebugLog.Out("MARSHMALLOW BOOOOOOO!");
                 track = new(aabuilder.Build(), afbuilder.Build(), bufferSize, AudioTrackMode.Stream, AudioManager.AudioSessionIdGenerate);
             }
             bufferFrames = track.BufferSizeInFrames;
+            track.SetVolume(volume);
             track.Play();
             MessageHub.Message += MessageHub_Message;
         }

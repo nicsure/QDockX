@@ -11,7 +11,7 @@ namespace QDockX.UI
 {
     public class Potentiometer : ContentView
     {
-        private readonly Grid grid;
+        private readonly Grid grid, notchGrid;
         private readonly Ellipse notch, ring, inner;
         private double panY;
 
@@ -23,7 +23,9 @@ namespace QDockX.UI
             Content = grid = new Grid();
             grid.Add(ring = new Ellipse() { Fill = RingColor });
             grid.Add(inner = new Ellipse() { Fill = InnerColor, ScaleX = 0.985, ScaleY = 0.985 });
-            grid.Add(notch = new Ellipse() { Fill = NotchColor, ScaleX = 0.2, ScaleY = 0.2 });
+            notchGrid = new();
+            grid.Add(notchGrid);
+            notchGrid.Add(notch = new Ellipse() { Fill = NotchColor, ScaleX = 0.2, ScaleY = 0.2 });
             SizeChanged += Potentiometer_SizeChanged;
         }
 
@@ -44,7 +46,7 @@ namespace QDockX.UI
                 case GestureStatus.Running:
                     double dy = e.TotalY - panY;
                     panY = e.TotalY;
-                    double a = Rotation - (dy * 2);
+                    double a = notchGrid.Rotation - (dy * 2);
                     while (a > 180) a -= 360;
                     while (a < -180) a += 360;
                     a = a < -150 ? -150 : a > 150 ? 150 : a;
@@ -64,7 +66,7 @@ namespace QDockX.UI
         {
             if(bindable is Potentiometer p && newValue is double d)
             {
-                p.Rotation = (d * 300) - 150;
+                p.notchGrid.Rotation = (d * 300) - 150;
             }
         }
 
