@@ -25,8 +25,8 @@ namespace QDockX.Language
         public static string Exit { get; set; } = "Exit";
         public static string Language { get; set; } = "Language";
         public static string Font { get; set; } = "Font Adjustment";
-        public static string Width { get; set; } = "Width";
-        public static string Height { get; set; } = "Height";
+        public static string Size { get; set; } = "Size";
+        public static string Offset { get; set; } = "Offset";
         public static string Small { get; set; } = "Small";
         public static string Medium { get; set; } = "Medium";
         public static string Large { get; set; } = "Large";
@@ -132,9 +132,8 @@ namespace QDockX.Language
 
         public static void LoadLanguage(string language)
         {
-            return;
             string file = Path.Combine(FileSystem.AppDataDirectory, $"{language}.lang");
-            if (language.Equals("en") && !File.Exists(file)) // TEMP
+            if (language.Equals("en"))// && !File.Exists(file)) // TEMP
             {
                 SaveLanguage(file);
             }

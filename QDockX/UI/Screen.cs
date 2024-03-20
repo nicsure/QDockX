@@ -14,7 +14,7 @@ namespace QDockX.UI
     public class Screen : Frame
     {
 
-        private Grid grid;
+        private readonly Grid grid;
         private readonly Dictionary<int, Label> texts = new();
         private readonly List<Label>[] lines = new List<Label>[8];
 
@@ -42,7 +42,7 @@ namespace QDockX.UI
             foreach(Label label in array)
             {
                 grid.Remove(label);
-                if(texts.Values.Contains(label))
+                if(texts.ContainsValue(label))
                     texts.Remove(label.ZIndex);
                 lines[line].Remove(label);
             }
@@ -70,30 +70,29 @@ namespace QDockX.UI
                         if (height <= 0.5)
                         {
                             w = Data.Instance.SmallWidth.Value / 20.0;
-                            h = Data.Instance.SmallHeight.Value / 10.0;
+                            h = Data.Instance.SmallHeight.Value / 2.0;
                         }
                         else if (height <= 1)
                         {
                             w = Data.Instance.SmallWidth.Value / 10.0;
-                            h = Data.Instance.SmallHeight.Value / 10.0;
+                            h = Data.Instance.SmallHeight.Value / 2.0;
                         }
                         else if (height <= 1.5)
                         {
                             w = Data.Instance.MediumWidth.Value / 10.0;
-                            h = Data.Instance.MediumHeight.Value / 10.0;
+                            h = Data.Instance.MediumHeight.Value / 2.0;
                         }
                         else
                         {
                             w = Data.Instance.LargeWidth.Value / 10.0;
-                            h = Data.Instance.LargeHeight.Value / 10.0;
+                            h = Data.Instance.LargeHeight.Value / 2.0;
                         }
                         Label label = new()
                         {
                             Padding = Padding,
                             TranslationX = x,
-                            TranslationY = y,
-                            Text = text,
-                            ScaleY = h,
+                            TranslationY = y + h,
+                            Text = text,                            
                             FontFamily = MonospaceFont.Name,
                             TextColor = Data.Instance.LCDForeground.Value,
                             FontSize = w,

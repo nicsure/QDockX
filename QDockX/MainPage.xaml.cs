@@ -21,7 +21,7 @@ public partial class MainPage : ContentPage
         QDNH.Init();
         Playback.Init();
         Capture.Init();
-        Serial.Init();        
+        Serial.Init();
     }
 
 }

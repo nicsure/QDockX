@@ -25,16 +25,16 @@ namespace QDockX.Context
         public ViewModel<Color> LCDForeground { get; } = new(Colors.LimeGreen, nameof(LCDForeground));
         public ViewModel<Color> LED { get; } = new(Colors.Black, null);
         public ViewModel<string> Page { get; } = new("Main", null);
-        public ViewModel<string> Host { get; } = new("127.0.0.1", nameof(Host));
+        public ViewModel<string> Host { get; } = new("192.168.0.2", nameof(Host));
         public ViewModel<int> Port { get; } = new(18822, nameof(Port));
         public ViewModel<string> Password { get; } = new(string.Empty, nameof(Password));
         public ViewModel<int> Latency { get; } = new(100, nameof(Latency));
-        public ViewModel<int> SmallWidth { get; } = new(110, nameof(Latency));
-        public ViewModel<int> SmallHeight { get; } = new(10, nameof(Latency));
+        public ViewModel<int> SmallWidth { get; } = new(100, nameof(Latency));
+        public ViewModel<int> SmallHeight { get; } = new(0, nameof(Latency));
         public ViewModel<int> MediumWidth { get; } = new(150, nameof(Latency));
-        public ViewModel<int> MediumHeight { get; } = new(10, nameof(Latency));
-        public ViewModel<int> LargeWidth { get; } = new(200, nameof(Latency));
-        public ViewModel<int> LargeHeight { get; } = new(20, nameof(Latency));
+        public ViewModel<int> MediumHeight { get; } = new(0, nameof(Latency));
+        public ViewModel<int> LargeWidth { get; } = new(190, nameof(Latency));
+        public ViewModel<int> LargeHeight { get; } = new(12, nameof(Latency));
         public IList<string> Languages
         {
             get => Lang.Available;
@@ -70,8 +70,8 @@ namespace QDockX.Context
         public ViewModel<string> LatencyLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> LanguageLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> FontLabel { get; private set; } = new(string.Empty, null);
-        public ViewModel<string> WidthLabel { get; private set; } = new(string.Empty, null);
-        public ViewModel<string> HeightLabel { get; private set; } = new(string.Empty, null);
+        public ViewModel<string> SizeLabel { get; private set; } = new(string.Empty, null);
+        public ViewModel<string> OffsetLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> SmallLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> MediumLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> LargeLabel { get; private set; } = new(string.Empty, null);
@@ -114,8 +114,8 @@ namespace QDockX.Context
             LatencyLabel.Value = Lang.Latency;
             LanguageLabel.Value = Lang.Language;
             FontLabel.Value = Lang.Font;
-            WidthLabel.Value = Lang.Width;
-            HeightLabel.Value = Lang.Height;
+            SizeLabel.Value = Lang.Size;
+            OffsetLabel.Value = Lang.Offset;
             SmallLabel.Value = Lang.Small;
             MediumLabel.Value = Lang.Medium;
             LargeLabel.Value = Lang.Large;

@@ -8,7 +8,7 @@ namespace QDockX.Util
 {
     public static class Watchdog
     {
-        private static List<Task> tasks = new();
+        private static readonly List<Task> tasks = new();
         public static void Init()
         {
             Task.Run(Loop);
