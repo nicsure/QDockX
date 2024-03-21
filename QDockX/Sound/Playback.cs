@@ -1,6 +1,5 @@
 ﻿using NAudio.CoreAudioApi;
 using NAudio.Wave;
-using Plugin.AudioRecorder;
 using QDockX.Context;
 using QDockX.Debug;
 using System;

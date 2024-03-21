@@ -52,7 +52,7 @@ namespace QDockX.Context
                 }
                 else
                 {
-                    if (value.Equals(val))
+                    if (value?.Equals(val) ?? false)
                         return;
                     val = value;
                     OnChange();

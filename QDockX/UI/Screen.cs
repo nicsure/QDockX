@@ -17,6 +17,7 @@ namespace QDockX.UI
         private readonly Grid grid;
         private readonly Dictionary<int, Label> texts = new();
         private readonly List<Label>[] lines = new List<Label>[8];
+        private readonly BarMeter signal;
 
         public Screen() : base()
         {
@@ -30,6 +31,14 @@ namespace QDockX.UI
                 HeightRequest = 128,
             };
             Content = grid;
+            signal = new()
+            {
+                TranslationX = 24,
+                TranslationY = 2,
+                HeightRequest = 13,
+                WidthRequest = 78
+            };
+            grid.Add(signal);
             SizeChanged += Screen_SizeChanged;
             Padding = new(0);
             MessageHub.Message += MessageHub_Message;
@@ -100,11 +109,15 @@ namespace QDockX.UI
                             ZIndex = c
                         };
                         grid.Add(label);
-                        if (texts.Remove(c, out Label del))    
+                        if (texts.Remove(c, out Label del))
                             grid.Remove(del);
                         texts[c] = label;
                         lines[line].Add(label);
                     });
+                    break;
+                case "LcdSignal":
+                    if (e.Parameter is int i)
+                        signal.SetLevel(i);
                     break;
             }
         }

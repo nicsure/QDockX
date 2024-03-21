@@ -21,6 +21,7 @@ namespace QDockX.Network
 
         public static void Init()
         {
+            Data.Instance.LED2.Value = Colors.Black;
             Task.Run(Loop);
         }
 
@@ -36,6 +37,8 @@ namespace QDockX.Network
                     serial = new();
                     audio = new();
                     bool audioAuth = false, serialAuth = false;
+                    Data.Instance.LED2.Value = Colors.Orange;
+                    Color err = Colors.Red;
                     try
                     {
                         using Task serialConnect = serial.ConnectAsync(Data.Instance.Host.Value, Data.Instance.Port.Value + 1);
@@ -44,19 +47,22 @@ namespace QDockX.Network
                         await audioConnect;
                         serialStream = serial.GetStream();
                         audioStream = audio.GetStream();
+                        err = Colors.Yellow;
                         serialAuth = Authenticate(serialStream, Data.Instance.Password.Value);
                         audioAuth = Authenticate(audioStream, Data.Instance.Password.Value);
                     }
                     catch (Exception ex) { DebugLog.Exception(ex); }
                     if (serialAuth && audioAuth)
                     {
+                        err = Colors.Magenta;
                         using Task serialPump = Pump(serialStream, "SerialIn");
                         using Task audioPump = Pump(audioStream, "AudioIn");
                         ready = true;
+                        Data.Instance.LED2.Value = Colors.Green;
                         await serialPump;
                         await audioPump;
                     }
-                    Close();
+                    Close(err);
                     serial = null;
                     audio = null;
                     serialStream = null;
@@ -135,6 +141,12 @@ namespace QDockX.Network
                     }
                     break;
             }
+        }
+
+        public static void Close(Color col)
+        {
+            Data.Instance.LED2.Value = col;
+            Close();
         }
 
         public static void Close()

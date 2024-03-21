@@ -3,6 +3,7 @@ using QDockX.Language;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,8 +18,17 @@ namespace QDockX.UI
             SizeChanged += QButton_MeasureInvalidated;
             Pressed += QButton_Pressed;
             Released += QButton_Released;
-            Unfocused += QButton_Released;
+            Unfocused += QButton_Released;            
             Padding = new(4,0,4,4);
+        }
+
+        protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            base.OnPropertyChanged(propertyName);
+            if(propertyName.Equals("IsEnabled"))
+            {
+                Opacity = IsEnabled ? 1 : 0.5;
+            }
         }
 
         private void QButton_Released(object sender, EventArgs e)

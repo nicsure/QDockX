@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.Maui.Controls.Shapes;
 using QDockX.Debug;
+using QDockX.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,12 @@ namespace QDockX.UI
         {            
             switch(e.StatusType)
             {
+                case GestureStatus.Canceled:
+                case GestureStatus.Completed:
+                    Gesturing = false;
+                    break;
                 case GestureStatus.Started:
+                    Gesturing = true;
                     panY = 0;
                     break;
                 case GestureStatus.Running:
@@ -54,6 +60,14 @@ namespace QDockX.UI
                     break;
             }
         }
+
+        public bool Gesturing
+        {
+            get { return (bool)GetValue(GesturingProperty); }
+            set { SetValue(GesturingProperty, value); }
+        }
+        public static readonly BindableProperty GesturingProperty =
+            BindableProperty.Create(nameof(Gesturing), typeof(bool), typeof(Potentiometer), defaultValue: false);
 
         public double Value
         {

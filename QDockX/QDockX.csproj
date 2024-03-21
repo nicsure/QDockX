@@ -94,7 +94,6 @@
 
 	<ItemGroup>
 	  <PackageReference Include="NAudio.Wasapi" Version="2.2.1" />
-	  <PackageReference Include="Plugin.AudioRecorder" Version="1.1.0" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,5 +1,6 @@
 ﻿using QDockX.Context;
 using QDockX.UI;
+using QDockX.Util;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -136,7 +137,7 @@ namespace QDockX.Radio
 
         private static void DrawSignal(int v1, int v2)
         {
-
+            MessageHub.Send("LcdSignal", v1 + v2);
         }
 
         private static void UiPacket()
@@ -168,22 +169,27 @@ namespace QDockX.Radio
                     {
                         case 1:
                             ps = "T  ";
+                            Status.TX = true;
                             Data.Instance.LED.Value = Colors.Red;
                             break;
                         case 2:
                             ps = "R  ";
+                            Status.RX = true;
                             Data.Instance.LED.Value = Colors.LimeGreen;
                             break;
                         case 4:
                             ps = "PS ";
+                            Status.SQ = true;
                             Data.Instance.LED.Value = Colors.Black;
                             break;
                         default:
                             ps = "   ";
+                            if (!Status.SQ)
+                                DrawSignal(0, 0);
+                            Status.SQ = true;
                             Data.Instance.LED.Value = Colors.DarkBlue;
                             break;
                     }
-
                     ps += (uiVal1 & 8) != 0 ? "NOA " : "    ";
                     ps += (uiVal1 & 16) != 0 ? "DTMF " : "     ";
                     ps += (uiVal1 & 32) != 0 ? "FM " : "   ";

@@ -1,4 +1,5 @@
 ﻿
+
 using QDockX.Context;
 using QDockX.Debug;
 using System;
@@ -23,13 +24,23 @@ namespace QDockX.Language
         public static string User2 { get; set; } = "User Button 2";
         public static string Latency { get; set; } = "Audio Latency";
         public static string Exit { get; set; } = "Exit";
+        public static string Back { get; set; } = "Back";
         public static string Language { get; set; } = "Language";
-        public static string Font { get; set; } = "Font Adjustment";
+        public static string Font { get; set; } = "Font Adjust";
         public static string Size { get; set; } = "Size";
         public static string Offset { get; set; } = "Offset";
         public static string Small { get; set; } = "Small";
         public static string Medium { get; set; } = "Medium";
         public static string Large { get; set; } = "Large";
+        public static string AFGain { get; set; } = "AF Gain";
+        public static string MicGain { get; set; } = "Mic Gain";
+        public static string Edit { get; set; } = "Edit";
+        public static string Apply { get; set; } = "Apply";
+        public static string Delete { get; set; } = "Delete";
+        public static string SelectAll { get; set; } = "Select All";
+        public static string No { get; set; } = "No";
+        public static string Yes { get; set; } = "Yes";
+        public static string ConfirmDelLang { get; set; } = "Are you sure you wish to delete language:";
 
         public static string Button0 { get; set; } = "0";
         public static string Button1 { get; set; } = "1";
@@ -71,8 +82,8 @@ namespace QDockX.Language
 
 
         private static readonly Dictionary<string, PropertyInfo> properties = new();
-        private static readonly List<string> available = new();
-        public static List<string> Available => available;
+        private static readonly System.Collections.ObjectModel.ObservableCollection<string> available = new();
+        public static System.Collections.ObjectModel.ObservableCollection<string> Available => available;
         static Lang()
         {
             var type = typeof(Lang);
@@ -89,53 +100,48 @@ namespace QDockX.Language
 
         public static void FindAvailable()
         {
-            available.Clear();
             foreach (var langFile in Directory.GetFiles(FileSystem.AppDataDirectory, "*.lang"))
             {
-                string lang = Path.GetFileNameWithoutExtension(langFile);
-                available.Add(lang);
+                string lang = Path.GetFileNameWithoutExtension(langFile).ToLower();
+                if(!available.Contains(lang))
+                    available.Add(lang);
             }
-            if (Data.Instance != null)
-                Data.Instance.Languages = null;
         }
 
-        public static void SaveLanguage(string file)
+        public static void DeleteLanguge(string language)
         {
-            List<string> ent = new();
+            string file = Path.Combine(FileSystem.AppDataDirectory, $"{language.ToLower()}.lang");
+            File.Delete(file);
+            available.Remove(language.ToLower());
+        }
+
+        public static string GetLanguageData()
+        {
+            string s = string.Empty;
             foreach (var name in properties.Keys)
-            {
-                ent.Add($"{name}={(string)properties[name].GetValue(null)}");
-            }
-            try
-            {
-                File.WriteAllLines(file, ent);
-            }
-            catch (Exception ex) { DebugLog.Exception(ex); return; }
+                s += $"{name}={(string)properties[name].GetValue(null)}\r\n";
+            return s;
         }
 
-        public static void ImportLanguage(string file) 
+        public static void SaveLanguage(string language, string data = null)
         {
-            string[] lines;
+            string file = Path.Combine(FileSystem.AppDataDirectory, $"{language.ToLower()}.lang");
+            data ??= GetLanguageData();
             try
             {
-                lines = File.ReadAllLines(file);
+                File.WriteAllText(file, data);
             }
             catch (Exception ex) { DebugLog.Exception(ex); return; }
-            file = Path.Combine(FileSystem.AppDataDirectory, $"{Path.GetFileNameWithoutExtension(file)}.lang");
-            try
-            {
-                File.WriteAllLines (file, lines);
-            }
-            catch (Exception ex) { DebugLog.Exception(ex); return; }
-            FindAvailable();
         }
 
+        private static bool firstRun = true;
         public static void LoadLanguage(string language)
         {
-            string file = Path.Combine(FileSystem.AppDataDirectory, $"{language}.lang");
-            if (language.Equals("en"))// && !File.Exists(file)) // TEMP
+            string file = Path.Combine(FileSystem.AppDataDirectory, $"{language.ToLower()}.lang");
+            if (language.ToLower().Equals("en") && firstRun)// && !File.Exists(file)) // TEMP
             {
-                SaveLanguage(file);
+                firstRun = false;
+                SaveLanguage("en");
             }
             string[] lines;
             try

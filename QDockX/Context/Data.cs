@@ -24,20 +24,30 @@ namespace QDockX.Context
         public ViewModel<Color> LCDBackground { get; } = new(Colors.Black, nameof(LCDBackground));
         public ViewModel<Color> LCDForeground { get; } = new(Colors.LimeGreen, nameof(LCDForeground));
         public ViewModel<Color> LED { get; } = new(Colors.Black, null);
+        public ViewModel<Color> LED2 { get; } = new(Colors.Red, null);
         public ViewModel<string> Page { get; } = new("Main", null);
         public ViewModel<string> Host { get; } = new("192.168.0.2", nameof(Host));
         public ViewModel<int> Port { get; } = new(18822, nameof(Port));
         public ViewModel<string> Password { get; } = new(string.Empty, nameof(Password));
-        public ViewModel<int> Latency { get; } = new(100, nameof(Latency));
-        public ViewModel<int> SmallWidth { get; } = new(100, nameof(Latency));
-        public ViewModel<int> SmallHeight { get; } = new(0, nameof(Latency));
-        public ViewModel<int> MediumWidth { get; } = new(150, nameof(Latency));
-        public ViewModel<int> MediumHeight { get; } = new(0, nameof(Latency));
-        public ViewModel<int> LargeWidth { get; } = new(190, nameof(Latency));
-        public ViewModel<int> LargeHeight { get; } = new(12, nameof(Latency));
+        public ViewModel<int> Latency { get; } = new(99, nameof(Latency));
+        public ViewModel<int> SmallWidth { get; } = new(101, nameof(SmallWidth));
+        public ViewModel<int> SmallHeight { get; } = new(0, nameof(SmallHeight));
+        public ViewModel<int> MediumWidth { get; } = new(150, nameof(MediumWidth));
+        public ViewModel<int> MediumHeight { get; } = new(0, nameof(MediumHeight));
+        public ViewModel<int> LargeWidth { get; } = new(190, nameof(LargeWidth));
+        public ViewModel<int> LargeHeight { get; } = new(12, nameof(LargeHeight));
         public ViewModel<double> Volume { get; } = new(0.5, nameof(Volume));
         public ViewModel<double> Boost { get; } = new(0.5, nameof(Boost));
-        public IList<string> Languages
+        public ViewModel<bool> AdjustingMic { get; } = new(false, null);
+        public ViewModel<string> LanguageDesignator { get; } = new(string.Empty, null);
+        public ViewModel<string> LanguageData { get; } = new(string.Empty, null);
+        public ViewModel<string> YesNoQuestion { get; } = new(string.Empty, null);
+        public ViewModel<string> YesAction { get; } = new(string.Empty, null);
+        public ViewModel<string> NoAction { get; } = new(string.Empty, null);
+
+
+
+        public System.Collections.ObjectModel.ObservableCollection<string> Languages
         {
             get => Lang.Available;
             set => OnPropertyChanged(nameof(Languages));
@@ -67,6 +77,7 @@ namespace QDockX.Context
         public ViewModel<string> LCDBackgroundLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> LCDForegroundLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> ExitLabel { get; private set; } = new(string.Empty, null);
+        public ViewModel<string> BackLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> User1Label { get; private set; } = new(string.Empty, null);
         public ViewModel<string> User2Label { get; private set; } = new(string.Empty, null);
         public ViewModel<string> LatencyLabel { get; private set; } = new(string.Empty, null);
@@ -77,6 +88,14 @@ namespace QDockX.Context
         public ViewModel<string> SmallLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> MediumLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> LargeLabel { get; private set; } = new(string.Empty, null);
+        public ViewModel<string> AFGainLabel { get; private set; } = new(string.Empty, null);
+        public ViewModel<string> MicGainLabel { get; private set; } = new(string.Empty, null);
+        public ViewModel<string> EditLabel { get; private set; } = new(string.Empty, null);
+        public ViewModel<string> ApplyLabel { get; private set; } = new(string.Empty, null);
+        public ViewModel<string> DeleteLabel { get; private set; } = new(string.Empty, null);
+        public ViewModel<string> SelectAllLabel { get; private set; } = new(string.Empty, null);
+        public ViewModel<string> YesLabel { get; private set; } = new(string.Empty, null);
+        public ViewModel<string> NoLabel { get; private set; } = new(string.Empty, null);
 
         public Data()
         {
@@ -87,7 +106,7 @@ namespace QDockX.Context
 
         public void InitLanguageModels()
         {
-            Lang.LoadLanguage(Language.Value);
+            Lang.LoadLanguage(Language.Value ?? "en");
             Button0.Value = Lang.Button0;
             Button1.Value = Lang.Button1;
             Button2.Value = Lang.Button2;
@@ -121,6 +140,15 @@ namespace QDockX.Context
             SmallLabel.Value = Lang.Small;
             MediumLabel.Value = Lang.Medium;
             LargeLabel.Value = Lang.Large;
+            AFGainLabel.Value = Lang.AFGain;
+            MicGainLabel.Value = Lang.MicGain;
+            EditLabel.Value = Lang.Edit;
+            ApplyLabel.Value = Lang.Apply;
+            DeleteLabel.Value = Lang.Delete;
+            SelectAllLabel.Value = Lang.SelectAll;
+            YesLabel.Value = Lang.Yes;
+            NoLabel.Value = Lang.No;
+            BackLabel.Value = Lang.Back;
         }
     }
 

@@ -15,11 +15,15 @@ namespace QDockX.Context
         {
             switch (key)
             {
+                case "NotEN": return !(value == null || value.ToString().Length == 0 || value.ToString().ToLower().Equals("en"));
                 case "Not": return !((bool)value);
                 case "ToBrush": return new SolidColorBrush(value as Color);
                 case "ToArgb": return (value as Color).ToArgbHex();
                 case "ToArgbBack": return Color.FromArgb(value as string);
+                case var n when n.StartsWith("EqIC"): return key[4..].ToLower().Equals(value.ToString().ToLower());
+                case var n when n.StartsWith("NeIC"): return !key[4..].ToLower().Equals(value.ToString().ToLower());
                 case var n when n.StartsWith("Eq"): return key[2..].Equals(value.ToString());
+                case var n when n.StartsWith("Ne"): return !key[2..].Equals(value.ToString());
             }
             if (key.Length > 2 && ToDoubles(key[2..], value, out var A, out var B))
             {

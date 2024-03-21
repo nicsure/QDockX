@@ -1,5 +1,4 @@
 ﻿using Android.Media;
-using Plugin.AudioRecorder;
 using QDockX.Context;
 using QDockX.Debug;
 using QDockX.Sound;

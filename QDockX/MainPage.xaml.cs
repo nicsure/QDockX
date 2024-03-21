@@ -16,6 +16,7 @@ public partial class MainPage : ContentPage
 	{
         BindingContext = Data.Instance;
 		InitializeComponent();
+        Shared.LanguageEditor = LangEditor;
         Watchdog.Init();
         ButtonProcesor.Init();
         Playback.Init();
