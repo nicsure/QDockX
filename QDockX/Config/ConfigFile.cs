@@ -28,6 +28,11 @@ namespace QDockX.Config
             catch (Exception ex) { DebugLog.Exception(ex); }
         }
 
+        public void Delete()
+        {
+            try { File.Delete(path); } catch { }
+        }
+
         public void Save()
         {
             List<string> lines = new();

@@ -24,23 +24,25 @@ namespace QDockX.Language
         public static string User2 { get; set; } = "User Button 2";
         public static string Latency { get; set; } = "Audio Latency";
         public static string Exit { get; set; } = "Exit";
-        public static string Back { get; set; } = "Back";
+        public static string Back { get; set; } = "◀";
         public static string Language { get; set; } = "Language";
-        public static string Font { get; set; } = "Font Adjust";
+        public static string Font { get; set; } = "Font";
         public static string Size { get; set; } = "Size";
         public static string Offset { get; set; } = "Offset";
         public static string Small { get; set; } = "Small";
         public static string Medium { get; set; } = "Medium";
         public static string Large { get; set; } = "Large";
-        public static string AFGain { get; set; } = "AF Gain";
-        public static string MicGain { get; set; } = "Mic Gain";
-        public static string Edit { get; set; } = "Edit";
-        public static string Apply { get; set; } = "Apply";
-        public static string Delete { get; set; } = "Delete";
+        public static string AFGain { get; set; } = "🔊";
+        public static string MicGain { get; set; } = "🎤";
+        public static string Edit { get; set; } = "🖊";
+        public static string Apply { get; set; } = "✔️";
+        public static string Delete { get; set; } = "🗑";
+        public static string Factory { get; set; } = "↺";
         public static string SelectAll { get; set; } = "Select All";
         public static string No { get; set; } = "No";
         public static string Yes { get; set; } = "Yes";
         public static string ConfirmDelLang { get; set; } = "Are you sure you wish to delete language:";
+        public static string ConfirmFactory { get; set; } = "ARE YOU SURE YOU WANT TO RESTORE DEFAULT SETTINGS?";
 
         public static string Button0 { get; set; } = "0";
         public static string Button1 { get; set; } = "1";
@@ -52,24 +54,24 @@ namespace QDockX.Language
         public static string Button7 { get; set; } = "7";
         public static string Button8 { get; set; } = "8";
         public static string Button9 { get; set; } = "9";
-        public static string Button10 { get; set; } = "M 🅐";
-        public static string Button11 { get; set; } = "↑ 🅑";
-        public static string Button12 { get; set; } = "↓ 🅒";
-        public static string Button13 { get; set; } = "← 🅓";
+        public static string Button10 { get; set; } = "𝑴";
+        public static string Button11 { get; set; } = "⬆";
+        public static string Button12 { get; set; } = "⬇";
+        public static string Button13 { get; set; } = "⇦";
         public static string Button14 { get; set; } = "✱";
-        public static string Button15 { get; set; } = "F #";
+        public static string Button15 { get; set; } = "𝑓";
         public static string Button16 { get; set; } = "PTT";
-        public static string ButtonF0 { get; set; } = "FMRA";
-        public static string ButtonF1 { get; set; } = "BAND";
-        public static string ButtonF2 { get; set; } = "A<>B";
-        public static string ButtonF3 { get; set; } = "V<>M";
-        public static string ButtonF4 { get; set; } = "CTSC";
-        public static string ButtonF5 { get; set; } = "SLRC";
-        public static string ButtonF6 { get; set; } = "POWR";
-        public static string ButtonF7 { get; set; } = "VOXX";
-        public static string ButtonF8 { get; set; } = "REVR";
-        public static string ButtonF9 { get; set; } = "CALL";
-        public static string ButtonF14 { get; set; } = "SACN";
+        public static string ButtonF0 { get; set; } = "📻";
+        public static string ButtonF1 { get; set; } = "〰️";
+        public static string ButtonF2 { get; set; } = "⇅";
+        public static string ButtonF3 { get; set; } = "📖";
+        public static string ButtonF4 { get; set; } = "🔭";
+        public static string ButtonF5 { get; set; } = "📊";
+        public static string ButtonF6 { get; set; } = "📡";
+        public static string ButtonF7 { get; set; } = "🗣";
+        public static string ButtonF8 { get; set; } = "⇆";
+        public static string ButtonF9 { get; set; } = "🔔";
+        public static string ButtonF14 { get; set; } = "🔍";
 
 
 
@@ -80,9 +82,9 @@ namespace QDockX.Language
 
 
 
-
+        private static List<string> enData = null;
         private static readonly Dictionary<string, PropertyInfo> properties = new();
-        private static readonly System.Collections.ObjectModel.ObservableCollection<string> available = new();
+        private static readonly System.Collections.ObjectModel.ObservableCollection<string> available = new() { "en" };
         public static System.Collections.ObjectModel.ObservableCollection<string> Available => available;
         static Lang()
         {
@@ -110,45 +112,47 @@ namespace QDockX.Language
 
         public static void DeleteLanguge(string language)
         {
-            string file = Path.Combine(FileSystem.AppDataDirectory, $"{language.ToLower()}.lang");
+            string file = Path.Combine(FileSystem.AppDataDirectory, language.LangFile());
             File.Delete(file);
             available.Remove(language.ToLower());
         }
 
-        public static string GetLanguageData()
+        public static List<string> GetLanguageData()
         {
-            string s = string.Empty;
+            List<string> s = new();
             foreach (var name in properties.Keys)
-                s += $"{name}={(string)properties[name].GetValue(null)}\r\n";
+                s.Add($"{name}={(string)properties[name].GetValue(null)}");
             return s;
         }
 
-        public static void SaveLanguage(string language, string data = null)
+        public static void SaveLanguage(string language, List<string> data = null)
         {
-            string file = Path.Combine(FileSystem.AppDataDirectory, $"{language.ToLower()}.lang");
+            string file = Path.Combine(FileSystem.AppDataDirectory, language.LangFile());
             data ??= GetLanguageData();
             try
             {
-                File.WriteAllText(file, data);
+                File.WriteAllLines(file, data);
             }
             catch (Exception ex) { DebugLog.Exception(ex); return; }
         }
-
-        private static bool firstRun = true;
+        
         public static void LoadLanguage(string language)
         {
-            string file = Path.Combine(FileSystem.AppDataDirectory, $"{language.ToLower()}.lang");
-            if (language.ToLower().Equals("en") && firstRun)// && !File.Exists(file)) // TEMP
-            {
-                firstRun = false;
-                SaveLanguage("en");
-            }
             string[] lines;
-            try
+            if (language.ToLower().Equals("en"))
             {
-                lines = File.ReadAllLines(file);
+                enData ??= GetLanguageData();
+                lines = enData.ToArray();
             }
-            catch (Exception ex) { DebugLog.Exception(ex); return; }
+            else
+            {
+                string file = Path.Combine(FileSystem.AppDataDirectory, language.LangFile());
+                try
+                {
+                    lines = File.ReadAllLines(file);
+                }
+                catch (Exception ex) { DebugLog.Exception(ex); return; }
+            }
             foreach (string line in lines) 
             {
                 string[] ke = line.Split('=');
@@ -163,5 +167,9 @@ namespace QDockX.Language
                 }
             }
         }
+
+        public static string LangFile(this string language) => $"{language.ToLower()}.lang";
+
+
     }
 }

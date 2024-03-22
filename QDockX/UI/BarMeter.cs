@@ -1,4 +1,5 @@
 ﻿using QDockX.Context;
+using QDockX.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace QDockX.UI
                 double h = (i+1) / 13.0;
                 grid.RowDefinitions.Add(new() { Height = new(1 - h, GridUnitType.Star) });
                 grid.RowDefinitions.Add(new() { Height = new(h, GridUnitType.Star) });
-                boxes[i] = new() { Margin = new(0, 0, 1, 0), Color = null };
+                boxes[i] = new() { Margin = new(1, 0, 1, 0), Color = null };
                 grid.SetRow(boxes[i], 1);
                 grid.Add(boxes[i]);
                 this.SetColumn(grid, i);
@@ -36,7 +37,7 @@ namespace QDockX.UI
 
         public void SetLevel(int val)
         {
-            Dispatcher.Dispatch(() =>
+            Shared.Dispatch(() =>
             {
                 for (int i = 0; i < 13; i++)
                 {

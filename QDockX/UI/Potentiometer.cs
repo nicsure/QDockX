@@ -23,10 +23,10 @@ namespace QDockX.UI
             pan.PanUpdated += Gesture_PanUpdated;     
             Content = grid = new Grid();
             grid.Add(ring = new Ellipse() { Fill = RingColor });
-            grid.Add(inner = new Ellipse() { Fill = InnerColor, ScaleX = 0.985, ScaleY = 0.985 });
+            grid.Add(inner = new Ellipse() { Fill = InnerColor, ScaleX = 0.945, ScaleY = 0.945 });
             notchGrid = new();
             grid.Add(notchGrid);
-            notchGrid.Add(notch = new Ellipse() { Fill = NotchColor, ScaleX = 0.2, ScaleY = 0.2 });
+            notchGrid.Add(notch = new Ellipse() { Fill = NotchColor, ScaleX = 0.1, ScaleY = 0.25 });
             SizeChanged += Potentiometer_SizeChanged;
         }
 

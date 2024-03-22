@@ -5,7 +5,7 @@
              xmlns:data="clr-namespace:QDockX.Context"
              xmlns:ui="clr-namespace:QDockX.UI"
              x:Class="QDockX.MainPage"
-             Background="#303030"
+             Background="#303030"             
              x:DataType="data:Data">
     <ContentPage.Resources>
         <Style x:Key="XLabel" TargetType="Label">
@@ -34,7 +34,14 @@
         </Style>
         <Style TargetType="ui:Potentiometer">
             <Setter Property="Margin" Value="5,5,5,5"/>
-            <Setter Property="RingColor" Value="#000000"/>
+            <Setter Property="RingColor">
+                <Setter.Value>
+                    <LinearGradientBrush EndPoint="1,1" StartPoint="0,0">
+                        <GradientStop Color="Black" Offset="1"/>
+                        <GradientStop Color="#aaaaaa" Offset="0"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
             <Setter Property="InnerColor" Value="#505050"/>
             <Setter Property="NotchColor" Value="#303030"/>
         </Style>
@@ -104,7 +111,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition Height="0.25*"/>
-                    <RowDefinition Height="0.25*"/>
+                    <RowDefinition Height="0.5*"/>
                     <RowDefinition />
                     <RowDefinition Height="0.25*"/>
                     <RowDefinition Height="0.1*"/>
@@ -150,7 +157,7 @@
             <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="6" Grid.Column="0" Text="{Binding User2Label.Value}"/>
             <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="7" Grid.Column="0" Text="{Binding LatencyLabel.Value}"/>
             <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="8" Grid.Column="0" Text="{Binding LanguageLabel.Value}"/>
-            <ui:AutoSizeLabel Style="{StaticResource XLabel}" TextColor="#888888" x:Name="LabelSample" Grid.Row="14" FontAttributes="None" Grid.Column="0" Text="QDockX 1.0 nicsure"/>
+            <ui:AutoSizeLabel Style="{StaticResource XLabel}" TextColor="#888888" x:Name="LabelSample" Grid.Row="14" FontAttributes="None" Grid.Column="0" Text="QDockX 1.1 nicsure"/>
 
             <Entry Grid.Row="0" Grid.Column="1" Text="{Binding Host.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
             <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Port.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
@@ -160,7 +167,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Entry Text="{Binding LCDBackground.Convert[ToArgb], Mode=TwoWay}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
+                <Entry Text="{Binding LCDBackgroundEdit.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
                 <Frame Padding="0,0,0,0" Margin="4,4,4,4" BorderColor="#777777" CornerRadius="20" Grid.Column="1" BackgroundColor="{Binding LCDBackground.Value}"/>
             </Grid>
             <Grid Grid.Row="4" Grid.Column="1">
@@ -168,7 +175,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Entry Text="{Binding LCDForeground.Convert[ToArgb], Mode=TwoWay}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
+                <Entry Text="{Binding LCDForegroundEdit.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
                 <Frame Padding="0,0,0,0" Margin="4,4,4,4" BorderColor="#777777" CornerRadius="20" Grid.Column="1" BackgroundColor="{Binding LCDForeground.Value}"/>
             </Grid>
             <Entry Grid.Row="5" Grid.Column="1" Text="{Binding Button18.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
@@ -207,7 +214,14 @@
                 <Entry Grid.Row="1" Grid.Column="3" Text="{Binding LargeWidth.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
                 <Entry Grid.Row="2" Grid.Column="3" Text="{Binding LargeHeight.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
             </Grid>
-            <ui:QButton Tag="Main" Grid.Row="13" Grid.Column="1" Grid.RowSpan="2" Text="{Binding BackLabel.Value}" />
+            <Grid Grid.Row="14" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <ui:QButton Grid.Column="0" Tag="FactoryAsk" Text="{Binding FactoryLabel.Value}" />
+                <ui:QButton Grid.Column="1" Tag="Main" Text="{Binding BackLabel.Value}" />
+            </Grid>
         </Grid>
 
 

@@ -96,6 +96,8 @@ namespace QDockX.Context
     public interface IChildVM
     {
         public static ConfigFile ConfigFile { get; } = new("main");
+        public static void Clear() => ConfigFile.Delete();
+        public static void Save() => ConfigFile.Save();
         public object Get();
         public void Set(object obj);
         public void OnChange();

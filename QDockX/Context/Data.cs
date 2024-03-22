@@ -20,9 +20,11 @@ namespace QDockX.Context
         // Data models 
         public ViewModel<string> Language { get; } = new("en", nameof(Language));
         public ViewModel<string> Button17 { get; private set; } = new("💡", nameof(Button17));
-        public ViewModel<string> Button18 { get; private set; } = new("SQ", nameof(Button18));
+        public ViewModel<string> Button18 { get; private set; } = new("🔇", nameof(Button18));
         public ViewModel<Color> LCDBackground { get; } = new(Colors.Black, nameof(LCDBackground));
         public ViewModel<Color> LCDForeground { get; } = new(Colors.LimeGreen, nameof(LCDForeground));
+        public ViewModel<string> LCDBackgroundEdit { get; } = new(string.Empty, null);
+        public ViewModel<string> LCDForegroundEdit { get; } = new(string.Empty, null);
         public ViewModel<Color> LED { get; } = new(Colors.Black, null);
         public ViewModel<Color> LED2 { get; } = new(Colors.Red, null);
         public ViewModel<string> Page { get; } = new("Main", null);
@@ -96,12 +98,27 @@ namespace QDockX.Context
         public ViewModel<string> SelectAllLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> YesLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> NoLabel { get; private set; } = new(string.Empty, null);
+        public ViewModel<string> FactoryLabel { get; private set; } = new(string.Empty, null);
 
         public Data()
         {
             Converter.SetConverter(new DataConverter());
             InitLanguageModels();
             Language.PropertyChanged += (object sender, PropertyChangedEventArgs e) => InitLanguageModels();
+            LCDBackgroundEdit.Value = LCDBackground.Value.ToArgbHex();
+            LCDForegroundEdit.Value = LCDForeground.Value.ToArgbHex();
+            LCDBackgroundEdit.PropertyChanged += (object sender, PropertyChangedEventArgs e) => LCDColorEdit(LCDBackgroundEdit, LCDBackground);
+            LCDForegroundEdit.PropertyChanged += (object sender, PropertyChangedEventArgs e) => LCDColorEdit(LCDForegroundEdit, LCDForeground);
+        }
+
+        private static void LCDColorEdit(ViewModel<string> edit, ViewModel<Color> col)
+        {
+            string s = edit.Value;
+            if (s.Length == 7 && s.StartsWith("#"))
+            {
+                try { Convert.ToInt32(s[1..], 16); } catch { return; }
+                col.Value = Color.FromArgb(s[1..]);
+            }
         }
 
         public void InitLanguageModels()
@@ -149,6 +166,7 @@ namespace QDockX.Context
             YesLabel.Value = Lang.Yes;
             NoLabel.Value = Lang.No;
             BackLabel.Value = Lang.Back;
+            FactoryLabel.Value = Lang.Factory;
         }
     }
 

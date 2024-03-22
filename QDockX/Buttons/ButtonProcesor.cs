@@ -30,15 +30,30 @@ namespace QDockX.Buttons
                                 break;
                             case var n when "EditLang".Equals(n):
                                 Data.Instance.LanguageDesignator.Value = Data.Instance.Language.Value;
-                                Data.Instance.LanguageData.Value = Lang.GetLanguageData();
+                                Data.Instance.LanguageData.Value = Lang.GetLanguageData().LinesToString();
                                 Data.Instance.Page.Value = "Language";
                                 break;
                             case var n when "EditLangReturn".Equals(n):
                                 Data.Instance.Page.Value = "Language";
                                 break;
                             case var n when "ApplyLang".Equals(n):
-                                Lang.SaveLanguage(Data.Instance.LanguageDesignator.Value, Data.Instance.LanguageData.Value);
+                                Lang.SaveLanguage(Data.Instance.LanguageDesignator.Value, Data.Instance.LanguageData.Value.StringtoLines());
                                 Lang.FindAvailable();
+                                if (Data.Instance.Language.Value == Data.Instance.LanguageDesignator.Value)
+                                    Data.Instance.InitLanguageModels();
+                                else
+                                    Data.Instance.Language.Value = Data.Instance.LanguageDesignator.Value;
+                                break;
+                            case var n when "FactoryAsk".Equals(n):
+                                Data.Instance.NoAction.Value = "Settings";
+                                Data.Instance.YesAction.Value = "Factory";
+                                Data.Instance.YesNoQuestion.Value = Lang.ConfirmFactory;
+                                Data.Instance.Page.Value = "YesNo";
+                                break;
+                            case var n when "Factory".Equals(n):
+                                IChildVM.Clear();
+                                int h = 0;
+                                h /= h;
                                 break;
                             case var n when "DeleteLangAsk".Equals(n):
                                 Data.Instance.NoAction.Value = "EditLangReturn";

@@ -27,16 +27,16 @@ namespace QDockX.UI
             grid = new Grid()
             {
                 Padding = Padding,
-                WidthRequest = 128,
-                HeightRequest = 128,
+                WidthRequest = 256,
+                HeightRequest = 256,
             };
             Content = grid;
             signal = new()
             {
-                TranslationX = 24,
-                TranslationY = 2,
-                HeightRequest = 13,
-                WidthRequest = 78
+                TranslationX = 55,
+                TranslationY = 5,
+                HeightRequest = 26,
+                WidthRequest = 143
             };
             grid.Add(signal);
             SizeChanged += Screen_SizeChanged;
@@ -62,7 +62,7 @@ namespace QDockX.UI
             switch (e.Message)
             {
                 case "LcdClear":
-                    Dispatcher.Dispatch(() =>
+                    Shared.Dispatch(() =>
                     {
                         var (start, end) = ((int start, int end))e.Parameter;
                         for (int i = start; i <= end; i++)
@@ -70,36 +70,37 @@ namespace QDockX.UI
                     });
                     break;
                 case "LcdText":
-                    Dispatcher.Dispatch(() =>
+                    Shared.Dispatch(() =>
                     {
                         var (x, line, height, text, bold) = ((int x, int line, double height, string text, bool bold))e.Parameter;
-                        int y = line * 16;
+                        x *= 2;
+                        int y = line * 32;
                         int c = (y << 8) | x;
                         double w, h;
                         if (height <= 0.5)
                         {
-                            w = Data.Instance.SmallWidth.Value / 20.0;
-                            h = Data.Instance.SmallHeight.Value / 2.0;
+                            w = Data.Instance.SmallWidth.Value / 10.0;
+                            h = Data.Instance.SmallHeight.Value / 1.0;
                         }
                         else if (height <= 1)
                         {
-                            w = Data.Instance.SmallWidth.Value / 10.0;
-                            h = Data.Instance.SmallHeight.Value / 2.0;
+                            w = Data.Instance.SmallWidth.Value / 5.0;
+                            h = Data.Instance.SmallHeight.Value / 1.0;
                         }
                         else if (height <= 1.5)
                         {
-                            w = Data.Instance.MediumWidth.Value / 10.0;
-                            h = Data.Instance.MediumHeight.Value / 2.0;
+                            w = Data.Instance.MediumWidth.Value / 5.0;
+                            h = Data.Instance.MediumHeight.Value / 1.0;
                         }
                         else
                         {
-                            w = Data.Instance.LargeWidth.Value / 10.0;
-                            h = Data.Instance.LargeHeight.Value / 2.0;
+                            w = Data.Instance.LargeWidth.Value / 5.0;
+                            h = Data.Instance.LargeHeight.Value / 1.0;
                         }
                         Label label = new()
                         {
                             Padding = Padding,
-                            TranslationX = x,
+                            TranslationX = x - ( h / 6),
                             TranslationY = y + h,
                             Text = text,                            
                             FontFamily = MonospaceFont.Name,
@@ -124,8 +125,8 @@ namespace QDockX.UI
 
         private void Screen_SizeChanged(object sender, EventArgs e)
         {
-            grid.ScaleX = Width / 128.0;
-            grid.ScaleY = Height / 128.0;            
+            grid.ScaleX = Width / 256.0;
+            grid.ScaleY = Height / 256.0;            
         }
 
 

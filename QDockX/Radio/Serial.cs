@@ -125,7 +125,7 @@ namespace QDockX.Radio
             }
         }
 
-        private static void DrawText(int x, int line, double height, string text, bool bold = false, bool stretch = false)
+        private static void DrawText(int x, int line, double height, string text, bool bold = false, bool _ = false)
         {
             MessageHub.Send("LcdText", (x, line, height, text, bold));
         }
@@ -227,7 +227,7 @@ namespace QDockX.Radio
             }
         }
 
-        private static void ParsePacket(byte[] data)
+        private static void ParsePacket(byte[] _)
         {
 
         }
