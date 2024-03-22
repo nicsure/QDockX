@@ -25,12 +25,14 @@ public partial class MainPage : ContentPage
         Serial.Init();        
     }
 
-    protected override void OnDisappearing()
+    protected override async void OnDisappearing()
     {
         Shared.LanguageEditor = null;
         IChildVM.Save();
-        Thread.Sleep(100);
+        using var delay = Task.Delay(200);
+        await delay;
         base.OnDisappearing();
+        Shared.LanguageEditor = LangEditor;
     }
 
     protected override bool OnBackButtonPressed()
