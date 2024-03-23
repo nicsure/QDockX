@@ -83,12 +83,17 @@ namespace QDockX.Context
 
         public void Set(object obj) => Value = (T)obj;
 
+        public bool SuspendChildUpdates { get; set; } = false;
+
         public void OnChange()
         {
             (_ = PropertyChanged)?.Invoke(this, eventArgs1);
             (_ = PropertyChanged)?.Invoke(this, eventArgs2);
-            foreach(var child in children)
-                child.OnChange();
+            if (!SuspendChildUpdates)
+            {
+                foreach (var child in children)
+                    child.OnChange();
+            }
             IChildVM.ConfigFile.Write(config, val);
         }
     }

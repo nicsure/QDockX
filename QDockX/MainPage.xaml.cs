@@ -22,7 +22,7 @@ public partial class MainPage : ContentPage
         Playback.Init();
         Capture.Init();
         QDNH.Init();
-        Serial.Init();        
+        Serial.Init();
     }
 
     protected override async void OnDisappearing()
@@ -32,6 +32,11 @@ public partial class MainPage : ContentPage
         using var delay = Task.Delay(200);
         await delay;
         base.OnDisappearing();
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
         Shared.LanguageEditor = LangEditor;
     }
 
@@ -47,8 +52,11 @@ public partial class MainPage : ContentPage
             case "Language":
                 Data.Instance.Page.Value = "Settings";
                 return true;
+            case "ColorEdit":
+                MessageHub.Send("Pressed", Data.Instance.ColEditCancelAction.Value);
+                return true;
             default:
-                Data.Instance.Page.Value = "Main";
+                MessageHub.Send("Pressed", "Main");
                 return true;
         }        
     }

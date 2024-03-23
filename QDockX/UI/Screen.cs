@@ -1,4 +1,5 @@
-﻿using QDockX.Context;
+﻿
+using QDockX.Context;
 using QDockX.Debug;
 using QDockX.Util;
 using System;
@@ -18,36 +19,46 @@ namespace QDockX.UI
         private readonly Dictionary<int, Label> texts = new();
         private readonly List<Label>[] lines = new List<Label>[8];
         private readonly BarMeter signal;
+        private double bSize, bFact, xFact, yFact, fWidth, fSmallWidth, fHeight;
 
         public Screen() : base()
-        {
+        {            
             for (int i = 0; i < 8; i++)
                 lines[i] = new List<Label>();
-            Padding = new(0);
+            Padding = Margin = new(0);
             grid = new Grid()
             {
                 Padding = Padding,
-                WidthRequest = 256,
-                HeightRequest = 256,
             };
-            Content = grid;
-            signal = new()
-            {
-                TranslationX = 55,
-                TranslationY = 5,
-                HeightRequest = 26,
-                WidthRequest = 143
-            };
+            signal = new();
+            CalcScreenFactors(338);
             grid.Add(signal);
+            Content = grid;
             SizeChanged += Screen_SizeChanged;
-            Padding = new(0);
             MessageHub.Message += MessageHub_Message;
+        }
+
+        private void CalcScreenFactors(double screenSize)
+        {
+            bSize = screenSize;
+            grid.WidthRequest = bSize;
+            grid.HeightRequest = bSize;
+            bFact = bSize / 256.0;
+            xFact = 2 * bFact;
+            yFact = 32 * bFact;
+            signal.TranslationX = 55 * bFact;
+            signal.TranslationY = 5 * bFact;
+            signal.HeightRequest = 26 * bFact;
+            signal.WidthRequest = 143 * bFact;
+            fSmallWidth = 10 / bFact;
+            fWidth = 5 / bFact;
+            fHeight = 1 / bFact;
         }
 
         private async Task DelayedRemoveLine(int line)
         {
             var array = lines[line].ToArray();
-            await (Watchdog.Watch = Task.Delay(150));
+            await (Watchdog.Watch = Task.Delay(100));
             foreach(Label label in array)
             {
                 grid.Remove(label);
@@ -73,35 +84,35 @@ namespace QDockX.UI
                     Shared.Dispatch(() =>
                     {
                         var (x, line, height, text, bold) = ((int x, int line, double height, string text, bool bold))e.Parameter;
-                        x *= 2;
-                        int y = line * 32;
-                        int c = (y << 8) | x;
+                        double xx = x * xFact;
+                        double yy = line * yFact;
+                        int c = (line << 8) | x;
                         double w, h;
                         if (height <= 0.5)
                         {
-                            w = Data.Instance.SmallWidth.Value / 10.0;
-                            h = Data.Instance.SmallHeight.Value / 1.0;
+                            w = Data.Instance.SmallWidth.Value / fSmallWidth;
+                            h = Data.Instance.SmallHeight.Value / fHeight;
                         }
                         else if (height <= 1)
                         {
-                            w = Data.Instance.SmallWidth.Value / 5.0;
-                            h = Data.Instance.SmallHeight.Value / 1.0;
+                            w = Data.Instance.SmallWidth.Value / fWidth;
+                            h = Data.Instance.SmallHeight.Value / fHeight;
                         }
                         else if (height <= 1.5)
                         {
-                            w = Data.Instance.MediumWidth.Value / 5.0;
-                            h = Data.Instance.MediumHeight.Value / 1.0;
+                            w = Data.Instance.MediumWidth.Value / fWidth;
+                            h = Data.Instance.MediumHeight.Value / fHeight;
                         }
                         else
                         {
-                            w = Data.Instance.LargeWidth.Value / 5.0;
-                            h = Data.Instance.LargeHeight.Value / 1.0;
+                            w = Data.Instance.LargeWidth.Value / fWidth;
+                            h = Data.Instance.LargeHeight.Value / fHeight;
                         }
                         Label label = new()
                         {
                             Padding = Padding,
-                            TranslationX = x - ( h / 6),
-                            TranslationY = y + h,
+                            TranslationX = xx - ( h / 6),
+                            TranslationY = yy + h,
                             Text = text,                            
                             FontFamily = MonospaceFont.Name,
                             TextColor = Data.Instance.LCDForeground.Value,
@@ -125,12 +136,9 @@ namespace QDockX.UI
 
         private void Screen_SizeChanged(object sender, EventArgs e)
         {
-            grid.ScaleX = Width / 256.0;
-            grid.ScaleY = Height / 256.0;            
+            grid.ScaleX = Width / bSize;
+            grid.ScaleY = Height / bSize;            
         }
-
-
-
 
     }
 }

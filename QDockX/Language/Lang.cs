@@ -41,8 +41,8 @@ namespace QDockX.Language
         public static string SelectAll { get; set; } = "Select All";
         public static string No { get; set; } = "No";
         public static string Yes { get; set; } = "Yes";
-        public static string ConfirmDelLang { get; set; } = "Are you sure you wish to delete language:";
-        public static string ConfirmFactory { get; set; } = "ARE YOU SURE YOU WANT TO RESTORE DEFAULT SETTINGS?";
+        public static string ConfirmDelLang { get; set; } = @"Are you sure you wish\nto delete language:";
+        public static string ConfirmFactory { get; set; } = @"ARE YOU SURE YOU WANT\nTO RESTORE DEFAULT SETTINGS?";
 
         public static string Button0 { get; set; } = "0";
         public static string Button1 { get; set; } = "1";

@@ -18,8 +18,6 @@ namespace QDockX.UI
                 return "Menlo";
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
                 return "Monospace";
-            if (DeviceInfo.Platform == DevicePlatform.Android)
-                return "monospace";
             if (DeviceInfo.Platform == DevicePlatform.iOS || DeviceInfo.Platform == DevicePlatform.MacCatalyst)
                 return "Menlo";
             return "monospace";

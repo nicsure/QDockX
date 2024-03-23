@@ -28,7 +28,7 @@ namespace QDockX.Context
         public ViewModel<Color> LED { get; } = new(Colors.Black, null);
         public ViewModel<Color> LED2 { get; } = new(Colors.Red, null);
         public ViewModel<string> Page { get; } = new("Main", null);
-        public ViewModel<string> Host { get; } = new("192.168.0.2", nameof(Host));
+        public ViewModel<string> Host { get; } = new("127.0.0.1", nameof(Host));
         public ViewModel<int> Port { get; } = new(18822, nameof(Port));
         public ViewModel<string> Password { get; } = new(string.Empty, nameof(Password));
         public ViewModel<int> Latency { get; } = new(99, nameof(Latency));
@@ -46,6 +46,13 @@ namespace QDockX.Context
         public ViewModel<string> YesNoQuestion { get; } = new(string.Empty, null);
         public ViewModel<string> YesAction { get; } = new(string.Empty, null);
         public ViewModel<string> NoAction { get; } = new(string.Empty, null);
+        public ViewModel<string> ColEditCaption { get; } = new(string.Empty, null);
+        public ViewModel<string> ColEditOKAction { get; } = new(string.Empty, null);
+        public ViewModel<string> ColEditCancelAction { get; } = new(string.Empty, null);
+        public ViewModel<double> ColEditRed { get; }
+        public ViewModel<double> ColEditGreen { get; }
+        public ViewModel<double> ColEditBlue { get; }
+        public ViewModel<Color> ColEditColor { get; } = new("RGBEdit");
 
 
 
@@ -103,6 +110,9 @@ namespace QDockX.Context
         public Data()
         {
             Converter.SetConverter(new DataConverter());
+            ColEditRed = new(0.0, null, ColEditColor);
+            ColEditGreen = new(0.0, null, ColEditColor);
+            ColEditBlue = new(0.0, null, ColEditColor);
             InitLanguageModels();
             Language.PropertyChanged += (object sender, PropertyChangedEventArgs e) => InitLanguageModels();
             LCDBackgroundEdit.Value = LCDBackground.Value.ToArgbHex();

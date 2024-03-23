@@ -45,6 +45,12 @@
             <Setter Property="InnerColor" Value="#505050"/>
             <Setter Property="NotchColor" Value="#303030"/>
         </Style>
+        <Style TargetType="Slider">
+            <Setter Property="Scale" Value="3" />
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="Minimum" Value="0.0" />
+            <Setter Property="Maximum" Value="1.0" />
+        </Style>
     </ContentPage.Resources>
     <Grid>
         
@@ -67,8 +73,8 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Frame Padding="10,10,10,10" Margin="4,4,4,4" BackgroundColor="{Binding LCDBackground.Value}" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="6" CornerRadius="20">
-                <ui:Screen BackgroundColor="{Binding LCDBackground.Value}" />
+            <Frame BorderColor="Transparent" Padding="10,10,10,10" Margin="4,4,4,4" BackgroundColor="{Binding LCDBackground.Value}" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="6" CornerRadius="20">
+                <ui:Screen BorderColor="Transparent" BackgroundColor="{Binding LCDBackground.Value}" />
             </Frame>
             <Grid Grid.Row="1" Grid.Column="0">
                 <Grid.RowDefinitions>
@@ -157,7 +163,7 @@
             <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="6" Grid.Column="0" Text="{Binding User2Label.Value}"/>
             <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="7" Grid.Column="0" Text="{Binding LatencyLabel.Value}"/>
             <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="8" Grid.Column="0" Text="{Binding LanguageLabel.Value}"/>
-            <ui:AutoSizeLabel Style="{StaticResource XLabel}" TextColor="#888888" x:Name="LabelSample" Grid.Row="14" FontAttributes="None" Grid.Column="0" Text="QDockX 1.1 nicsure"/>
+            <ui:AutoSizeLabel Style="{StaticResource XLabel}" TextColor="#888888" x:Name="LabelSample" Grid.Row="14" FontAttributes="None" Grid.Column="0" Text="QDockX 1.2 nicsure"/>
 
             <Entry Grid.Row="0" Grid.Column="1" Text="{Binding Host.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
             <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Port.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
@@ -168,7 +174,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Entry Text="{Binding LCDBackgroundEdit.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
-                <Frame Padding="0,0,0,0" Margin="4,4,4,4" BorderColor="#777777" CornerRadius="20" Grid.Column="1" BackgroundColor="{Binding LCDBackground.Value}"/>
+                <ui:QButton Tag="EditBGCol" Padding="0,0,0,0" Margin="4,4,4,4" BorderColor="#777777" CornerRadius="20" Grid.Column="1" ReleasedBackground="{Binding LCDBackground.Value}"/>
             </Grid>
             <Grid Grid.Row="4" Grid.Column="1">
                 <Grid.ColumnDefinitions>
@@ -176,7 +182,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Entry Text="{Binding LCDForegroundEdit.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
-                <Frame Padding="0,0,0,0" Margin="4,4,4,4" BorderColor="#777777" CornerRadius="20" Grid.Column="1" BackgroundColor="{Binding LCDForeground.Value}"/>
+                <ui:QButton Tag="EditFGCol" Padding="0,0,0,0" Margin="4,4,4,4" BorderColor="#777777" CornerRadius="20" Grid.Column="1" ReleasedBackground="{Binding LCDForeground.Value}"/>
             </Grid>
             <Entry Grid.Row="5" Grid.Column="1" Text="{Binding Button18.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
             <Entry Grid.Row="6" Grid.Column="1" Text="{Binding Button17.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
@@ -253,7 +259,7 @@
         <Grid IsVisible="{Binding Page.Convert[EqYesNo]}" Margin="3,3,3,3">
             <Grid.RowDefinitions>
                 <RowDefinition />
-                <RowDefinition />
+                <RowDefinition Height="2*"/>
                 <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
@@ -270,8 +276,38 @@
             <ui:QButton Grid.Column="3" Grid.Row="3" Tag="{Binding YesAction.Value}" Text="{Binding YesLabel.Value}" />
         </Grid>
 
+        
+        
+        
 
-
+        <Grid IsVisible="{Binding Page.Convert[EqColorEdit]}" Margin="3,3,3,3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="0.25*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.25*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition Height="0.1*"/>
+                <RowDefinition Height="1.5*"/>
+                <RowDefinition Height="1.5*"/>
+                <RowDefinition Height="0.25*"/>
+            </Grid.RowDefinitions>
+            <ui:AutoSizeLabel Grid.Row="1" Grid.ColumnSpan="5" TextColor="#bbbbbb" Text="{Binding ColEditCaption.Value}" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+            <Slider Value="{Binding ColEditRed.Value}" Grid.Row="2" Grid.Column="2" BackgroundColor="Red" MaximumTrackColor="Red" MinimumTrackColor="Red" />
+            <Slider Value="{Binding ColEditGreen.Value}" Grid.Row="3" Grid.Column="2" BackgroundColor="Green" MaximumTrackColor="Green" MinimumTrackColor="Green" />
+            <Slider Value="{Binding ColEditBlue.Value}" Grid.Row="4" Grid.Column="2" BackgroundColor="Blue" MaximumTrackColor="Blue" MinimumTrackColor="Blue" />
+            <BoxView Margin="0,0,5,0" CornerRadius="20" Grid.ColumnSpan="2" Grid.RowSpan="2" Grid.Row="6" Grid.Column="1" Color="#aaaaaa"/>
+            <BoxView Margin="5,5,10,5" Grid.ColumnSpan="2" Grid.RowSpan="2" CornerRadius="20" Grid.Row="6" Grid.Column="1" Color="{Binding ColEditColor.Value}"/>
+            <ui:QButton Tag="{Binding ColEditCancelAction.Value}" Text="❌" Grid.Row="6" Grid.Column="3"/>
+            <ui:QButton Tag="{Binding ColEditOKAction.Value}" TextColor="LimeGreen" Text="✔️" Grid.Row="7" Grid.Column="3"/>
+        </Grid>
 
 
 

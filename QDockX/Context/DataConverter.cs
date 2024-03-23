@@ -15,6 +15,19 @@ namespace QDockX.Context
         {
             switch (key)
             {
+                case "RGBEdit": return new Color(
+                        (float)Data.Instance.ColEditRed.Value,
+                        (float)Data.Instance.ColEditGreen.Value,
+                        (float)Data.Instance.ColEditBlue.Value
+                    );
+                case "RGBEditBack":
+                    if (value is Color c)
+                    {
+                        Data.Instance.ColEditRed.Value = c.Red;
+                        Data.Instance.ColEditGreen.Value = c.Green;
+                        Data.Instance.ColEditBlue.Value = c.Blue;
+                    }
+                    return null;                
                 case "NotEN": return !(value == null || value.ToString().Length == 0 || value.ToString().ToLower().Equals("en"));
                 case "Not": return !((bool)value);
                 case "ToBrush": return new SolidColorBrush(value as Color);

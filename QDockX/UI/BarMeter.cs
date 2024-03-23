@@ -19,20 +19,15 @@ namespace QDockX.UI
             for (int i = 0; i < 13; i++)
             {
                 ColumnDefinitions.Add(cdef);
-            }
-            for (int i = 0; i < 13; i++)
-            {
-                Grid grid = new() { Margin = Margin, Padding = Margin };                
-                double h = (i+1) / 13.0;
-                grid.RowDefinitions.Add(new() { Height = new(1 - h, GridUnitType.Star) });
-                grid.RowDefinitions.Add(new() { Height = new(h, GridUnitType.Star) });
+                Grid grid = new() { Margin = Margin, Padding = Margin };
+                grid.RowDefinitions.Add(new() { Height = new(12 - i, GridUnitType.Star) });
+                grid.RowDefinitions.Add(new() { Height = new(i + 1, GridUnitType.Star) });
                 boxes[i] = new() { Margin = new(1, 0, 1, 0), Color = null };
                 grid.SetRow(boxes[i], 1);
                 grid.Add(boxes[i]);
                 this.SetColumn(grid, i);
                 Add(grid);
             }
-            
         }
 
         public void SetLevel(int val)
