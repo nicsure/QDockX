@@ -47,7 +47,7 @@ namespace QDockX.Sound
                 byte[] b = new byte[bufferSize];
                 int br = capture.Read(b, 0, b.Length);
                 SoundProcessor.HalfRateAndAmplifyPCM16(b, br, boost);
-                MessageHub.Send("AudioOut", (b, br >> 1));
+                MessageHub.Send(Msg._audioout, (b, br >> 1));
             }
         }
 

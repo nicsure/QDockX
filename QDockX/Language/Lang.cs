@@ -43,6 +43,7 @@ namespace QDockX.Language
         public static string Yes { get; set; } = "Yes";
         public static string ConfirmDelLang { get; set; } = @"Are you sure you wish\nto delete language:";
         public static string ConfirmFactory { get; set; } = @"ARE YOU SURE YOU WANT\nTO RESTORE DEFAULT SETTINGS?";
+        public static string ConfirmExit { get; set; } = @"Changing the audio latency\nrequires the app be restarted.\nDo you wish to exit now?";
 
         public static string Button0 { get; set; } = "0";
         public static string Button1 { get; set; } = "1";
@@ -82,7 +83,7 @@ namespace QDockX.Language
 
 
 
-        private static List<string> enData = null;
+        private static readonly List<string> enData;
         private static readonly Dictionary<string, PropertyInfo> properties = new();
         private static readonly System.Collections.ObjectModel.ObservableCollection<string> available = new() { "en" };
         public static System.Collections.ObjectModel.ObservableCollection<string> Available => available;
@@ -97,6 +98,7 @@ namespace QDockX.Language
                     properties[propertyInfo.Name] = propertyInfo;
                 }
             }
+            enData = GetLanguageData();
             FindAvailable();
         }
 
@@ -141,7 +143,6 @@ namespace QDockX.Language
             string[] lines;
             if (language.ToLower().Equals("en"))
             {
-                enData ??= GetLanguageData();
                 lines = enData.ToArray();
             }
             else

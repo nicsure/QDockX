@@ -55,10 +55,11 @@ namespace QDockX.Network
                     if (serialAuth && audioAuth)
                     {
                         err = Colors.Magenta;
-                        using Task serialPump = Pump(serialStream, "SerialIn");
-                        using Task audioPump = Pump(audioStream, "AudioIn");
+                        using Task serialPump = Pump(serialStream, Msg._serialin);
+                        using Task audioPump = Pump(audioStream, Msg._audioin);
                         ready = true;
                         Data.Instance.LED2.Value = Colors.Green;
+                        MessageHub.Send(Msg._keypress, 13);
                         await serialPump;
                         await audioPump;
                     }
@@ -99,7 +100,7 @@ namespace QDockX.Network
         {
             switch(e.Message)
             {
-                case "AudioOut":
+                case var n when n == Msg._audioout:
                     if(ready)
                     {
                         if (audioWriteTask?.IsCompleted ?? true)
@@ -118,7 +119,7 @@ namespace QDockX.Network
                         }
                     }
                     break;
-                case "SerialOut":
+                case var n when n == Msg._serialout:
                     if(ready)
                     {
                         serialWriteTask?.Wait(5000);

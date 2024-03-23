@@ -1,5 +1,6 @@
 ﻿using QDockX.Buttons;
 using QDockX.Language;
+using QDockX.Util;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -114,6 +115,7 @@ namespace QDockX.Context
             ColEditGreen = new(0.0, null, ColEditColor);
             ColEditBlue = new(0.0, null, ColEditColor);
             InitLanguageModels();
+            Latency.PropertyChanged += (object sender, PropertyChangedEventArgs e) => Status.LatencyChanged = true;
             Language.PropertyChanged += (object sender, PropertyChangedEventArgs e) => InitLanguageModels();
             LCDBackgroundEdit.Value = LCDBackground.Value.ToArgbHex();
             LCDForegroundEdit.Value = LCDForeground.Value.ToArgbHex();

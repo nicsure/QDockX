@@ -21,78 +21,93 @@ namespace QDockX.Buttons
             {                
                 switch(e.Message)
                 {
-                    case "Pressed":
+                    case var m when m == Msg._pressed:
                         switch(e.Parameter)
                         {
-                            case var n when "Settings".Equals(n):
-                                Data.Instance.Page.Value = "Settings";
+                            case var n when Msg._settings.Equals(n):
+                                Data.Instance.Page.Value = Msg._settings;
                                 break;
-                            case var n when "Main".Equals(n):
-                                if (Data.Instance.Page.Value.Equals("Settings"))
+                            case var n when Msg._main.Equals(n):
+                                if (Data.Instance.Page.Value.Equals(Msg._settings))
+                                {
                                     IChildVM.Save();
-                                Data.Instance.Page.Value = "Main";
+                                    if(Status.LatencyChanged)
+                                    {
+                                        Status.LatencyChanged = false;
+                                        Data.Instance.NoAction.Value = Msg._main;
+                                        Data.Instance.YesAction.Value = Msg._exit;
+                                        Data.Instance.YesNoQuestion.Value = Lang.ConfirmExit.Replace(@"\n", "\r\n");
+                                        Data.Instance.Page.Value = Msg._yesno;
+                                        break;
+                                    }
+                                }
+                                Data.Instance.Page.Value = Msg._main;
                                 break;
-                            case var n when "EditLang".Equals(n):
+                            case var n when Msg._exit.Equals(n):
+                                Application.Current.Quit();
+                                break;
+                            case var n when Msg._editlang.Equals(n):
                                 Data.Instance.LanguageDesignator.Value = Data.Instance.Language.Value;
                                 Data.Instance.LanguageData.Value = Lang.GetLanguageData().LinesToString();
-                                Data.Instance.Page.Value = "Language";
+                                Data.Instance.Page.Value = Msg._language;
                                 break;
-                            case var n when "EditLangReturn".Equals(n):
-                                Data.Instance.Page.Value = "Language";
+                            case var n when Msg._editlangreturn.Equals(n):
+                                Data.Instance.Page.Value = Msg._language;
                                 break;
-                            case var n when "ApplyLang".Equals(n):
+                            case var n when Msg._applylang.Equals(n):
                                 Lang.SaveLanguage(Data.Instance.LanguageDesignator.Value, Data.Instance.LanguageData.Value.StringtoLines());
                                 Lang.FindAvailable();
                                 if (Data.Instance.Language.Value == Data.Instance.LanguageDesignator.Value)
                                     Data.Instance.InitLanguageModels();
                                 else
                                     Data.Instance.Language.Value = Data.Instance.LanguageDesignator.Value;
+                                Data.Instance.Page.Value = Msg._settings;
                                 break;
-                            case var n when "FactoryAsk".Equals(n):
-                                Data.Instance.NoAction.Value = "Settings";
-                                Data.Instance.YesAction.Value = "Factory";
+                            case var n when Msg._factoryask.Equals(n):
+                                Data.Instance.NoAction.Value = Msg._settings;
+                                Data.Instance.YesAction.Value = Msg._factory;
                                 Data.Instance.YesNoQuestion.Value = Lang.ConfirmFactory.Replace(@"\n", "\r\n");
-                                Data.Instance.Page.Value = "YesNo";
+                                Data.Instance.Page.Value = Msg._yesno;
                                 break;
-                            case var n when "Factory".Equals(n):
+                            case var n when Msg._factory.Equals(n):
                                 IChildVM.Clear();
                                 Application.Current.Quit();
                                 break;
-                            case var n when "DeleteLangAsk".Equals(n):
-                                Data.Instance.NoAction.Value = "EditLangReturn";
-                                Data.Instance.YesAction.Value = "DeleteLang";
+                            case var n when Msg._deletelangask.Equals(n):
+                                Data.Instance.NoAction.Value = Msg._editlangreturn;
+                                Data.Instance.YesAction.Value = Msg._deletelang;
                                 Data.Instance.YesNoQuestion.Value = $"{Lang.ConfirmDelLang.Replace(@"\n","\r\n")} {Data.Instance.LanguageDesignator.Value}";
-                                Data.Instance.Page.Value = "YesNo";
+                                Data.Instance.Page.Value = Msg._yesno;
                                 break;
-                            case var n when "DeleteLang".Equals(n):
+                            case var n when Msg._deletelang.Equals(n):
                                 string ltd = Data.Instance.LanguageDesignator.Value;
                                 Data.Instance.Language.Value = "en";
                                 Lang.DeleteLanguge(ltd);
-                                Data.Instance.Page.Value = "Settings";
+                                Data.Instance.Page.Value = Msg._settings;
                                 break;
-                            case var n when "EditBGCol".Equals(n):
+                            case var n when Msg._editbgcol.Equals(n):
                                 EditColor(Lang.LCDBackground, Data.Instance.LCDBackground);
                                 break;
-                            case var n when "EditFGCol".Equals(n):
+                            case var n when Msg._editfgcol.Equals(n):
                                 EditColor(Lang.LCDForeground, Data.Instance.LCDForeground);
                                 break;
-                            case var n when "ColEditOK".Equals(n):
+                            case var n when Msg._coloreditok.Equals(n):
                                 if(editedColor != null)
                                    editedColor.Value = Data.Instance.ColEditColor.Value;
-                                Data.Instance.Page.Value = "Settings";
+                                Data.Instance.Page.Value = Msg._settings;
                                 break;
                             case var n when n is string s && int.TryParse(s, out int i):
                                 keys |= (1 << i);
-                                MessageHub.Send("KeyPress", i);
+                                MessageHub.Send(Msg._keypress, i);
                                 break;
                         }
                         break;
-                    case "Released":
+                    case var m when m == Msg._released:
                         switch(e.Parameter)
                         {
                             case var n when n is string s && int.TryParse(s, out int i):
                                 keys &= ~(1 << i);
-                                if (keys == 0) MessageHub.Send("KeyPress", 19);
+                                if (keys == 0) MessageHub.Send(Msg._keypress, 19);
                                 break;
                         }
                         break;
@@ -105,9 +120,9 @@ namespace QDockX.Buttons
             editedColor = color;
             Data.Instance.ColEditCaption.Value = caption;
             Data.Instance.ColEditColor.Value = color.Value;
-            Data.Instance.ColEditOKAction.Value = "ColEditOK";
-            Data.Instance.ColEditCancelAction.Value = "Settings";
-            Data.Instance.Page.Value = "ColorEdit";
+            Data.Instance.ColEditOKAction.Value = Msg._coloreditok;
+            Data.Instance.ColEditCancelAction.Value = Msg._settings;
+            Data.Instance.Page.Value = Msg._coloredit;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using QDockX.Context;
+﻿using QDockX.Buttons;
+using QDockX.Context;
 using QDockX.Language;
 using System;
 using System.Collections.Generic;
@@ -35,14 +36,14 @@ namespace QDockX.UI
         {
             Background = ReleasedBackground;
             if (Tag is string tag)
-                MessageHub.Send("Released", tag);
+                MessageHub.Send(Msg._released, tag);
         }
 
         private void QButton_Pressed(object sender, EventArgs e)
         {
             Background = PressedBackground;
             if (Tag is string tag)
-                MessageHub.Send("Pressed", tag);
+                MessageHub.Send(Msg._pressed, tag);
         }
 
         private static void QButton_MeasureInvalidated(object sender, EventArgs e)

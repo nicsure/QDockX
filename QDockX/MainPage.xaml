@@ -50,6 +50,7 @@
             <Setter Property="VerticalOptions" Value="Center"/>
             <Setter Property="Minimum" Value="0.0" />
             <Setter Property="Maximum" Value="1.0" />
+            <Setter Property="ThumbColor" Value="White"/>
         </Style>
     </ContentPage.Resources>
     <Grid>
@@ -163,7 +164,7 @@
             <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="6" Grid.Column="0" Text="{Binding User2Label.Value}"/>
             <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="7" Grid.Column="0" Text="{Binding LatencyLabel.Value}"/>
             <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="8" Grid.Column="0" Text="{Binding LanguageLabel.Value}"/>
-            <ui:AutoSizeLabel Style="{StaticResource XLabel}" TextColor="#888888" x:Name="LabelSample" Grid.Row="14" FontAttributes="None" Grid.Column="0" Text="QDockX 1.2 nicsure"/>
+            <ui:AutoSizeLabel Style="{StaticResource XLabel}" TextColor="#888888" x:Name="LabelSample" Grid.Row="14" FontAttributes="None" Grid.Column="0" Text="QDockX 1.3 nicsure"/>
 
             <Entry Grid.Row="0" Grid.Column="1" Text="{Binding Host.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
             <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Port.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />

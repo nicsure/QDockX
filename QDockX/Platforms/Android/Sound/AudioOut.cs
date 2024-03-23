@@ -14,8 +14,7 @@ namespace QDockX.Sound
     public class AudioOut : IPlayback
     {
         private AudioTrack track = null;
-        private int bufferSize, bufferFrames, lag;
-        private Task lastTask = Task.Run(() => { });
+        private int bufferSize, bufferFrames;
         private float volume = 0.5f;
 
         public void Gain(double gain)
@@ -54,44 +53,32 @@ namespace QDockX.Sound
                 track = new(aabuilder.Build(), afbuilder.Build(), bufferSize, AudioTrackMode.Stream, AudioManager.AudioSessionIdGenerate);
             }
             bufferFrames = track.BufferSizeInFrames;
+            sbuf = new short[bufferFrames];
             track.SetVolume(volume);
             track.Play();
             MessageHub.Message += MessageHub_Message;
         }
 
+        private static short[] sbuf;
+        private static int scnt = 0;
         private void MessageHub_Message(object sender, MessageEventArgs e)
         {
-            switch (e.Message)
+            if (e.Message == Msg._audioin)
             {
-                case "AudioIn":
-                    bool idle = lastTask.IsCompleted;
-                    lag += idle ? -1 : 1;
-                    if (lag < 0) lag = 0;
-                    else if (lag > 3) break;
-                    if (!idle) lastTask.Wait();
-                    var (buffer, length) = ((byte[] buffer, int length))e.Parameter;
-                    short[] s = new short[length >> 1];
-                    unsafe
+                var (buffer, length) = ((byte[] buffer, int length))e.Parameter;
+                for (int i = 0; i < length; i += 2)
+                {
+                    sbuf[scnt++] = BitConverter.ToInt16(buffer, i);
+                    if (scnt >= bufferFrames)
                     {
-                        fixed (short* sptr = s)
-                        {
-                            System.Runtime.InteropServices.Marshal.Copy(buffer, 0, (IntPtr)sptr, length);
-                        }
+                        scnt = 0;
+                        track.Write(sbuf, 0, bufferFrames);
                     }
-                    using (lastTask)
-                    {
-                        lastTask = Task.Run(() =>
-                        {
-                            for (int i = 0; i < s.Length; i += bufferFrames)
-                            {
-                                int sl = s.Length - i;
-                                track.Write(s, i, sl > bufferFrames ? bufferFrames : sl);
-                            }
-                        });
-                    }
-                    break;
+                }
             }
         }
+
+
     }
 
 

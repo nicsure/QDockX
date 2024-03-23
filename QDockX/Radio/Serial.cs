@@ -1,4 +1,5 @@
-﻿using QDockX.Context;
+﻿using QDockX.Buttons;
+using QDockX.Context;
 using QDockX.UI;
 using QDockX.Util;
 using System;
@@ -29,13 +30,13 @@ namespace QDockX.Radio
         {
             switch(e.Message)
             {
-                case "KeyPress":
+                case var n when n == Msg._keypress:
                     if(e.Parameter is int keyNum)
                     {
                         SendCommand(Packet.KeyPress, (ushort)keyNum);
                     }
                     break;
-                case "SerialIn":
+                case var n when n == Msg._serialin:
                     var (buffer, length) = ((byte[] buffer, int length))e.Parameter;
                     for (int i = 0; i < length; i++)
                         ByteIn(buffer[i]);
@@ -316,7 +317,7 @@ namespace QDockX.Radio
             ind -= 8;
             data[2] = ind.Byte(0);
             data[3] = ind.Byte(1);
-            MessageHub.Send("SerialOut", (data, ind + 8));
+            MessageHub.Send(Msg._serialout, (data, ind + 8));
         }
 
 

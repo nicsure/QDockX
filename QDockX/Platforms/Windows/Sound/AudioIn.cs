@@ -37,7 +37,7 @@ namespace QDockX.Sound
 
         private void Capture_DataAvailable(object sender, WaveInEventArgs e)
         {
-            MessageHub.Send("AudioOut", (SoundProcessor.AmplifyPCM16(e.Buffer, e.BytesRecorded, boost, true), e.BytesRecorded));
+            MessageHub.Send(Msg._audioout, (SoundProcessor.AmplifyPCM16(e.Buffer, e.BytesRecorded, boost, true), e.BytesRecorded));
         }
 
         public void Gain(double gain)

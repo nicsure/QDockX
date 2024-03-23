@@ -44,19 +44,19 @@ public partial class MainPage : ContentPage
     {
         switch(Data.Instance.Page.Value)
         {
-            case "Main":
+            case var n when n == Msg._main:
                 return base.OnBackButtonPressed();
-            case "YesNo":
-                MessageHub.Send("Pressed", Data.Instance.NoAction.Value);
+            case var n when n == Msg._yesno:
+                MessageHub.Send(Msg._pressed, Data.Instance.NoAction.Value);
                 return true;
-            case "Language":
-                Data.Instance.Page.Value = "Settings";
+            case var n when n == Msg._language:
+                Data.Instance.Page.Value = Msg._settings;
                 return true;
-            case "ColorEdit":
-                MessageHub.Send("Pressed", Data.Instance.ColEditCancelAction.Value);
+            case var n when n == Msg._coloredit:
+                MessageHub.Send(Msg._pressed, Data.Instance.ColEditCancelAction.Value);
                 return true;
             default:
-                MessageHub.Send("Pressed", "Main");
+                MessageHub.Send(Msg._pressed, Msg._main);
                 return true;
         }        
     }

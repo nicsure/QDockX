@@ -52,7 +52,7 @@ namespace QDockX.Sound
 
         private void MessageHub_Message(object sender, MessageEventArgs e)
         {
-            if (e.Message.Equals("AudioIn"))
+            if (e.Message.Equals(Msg._audioin))
             {
                 var (buffer, length) = ((byte[] buffer, int length))e.Parameter;
                 if (provider.BufferedDuration.TotalSeconds > latencySecs)

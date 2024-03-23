@@ -26,5 +26,7 @@ namespace QDockX.Util
             set { sq = value; rx = tx = !value; }
         }
 
+        public static bool LatencyChanged { get; set; } = false;
+
     }
 }
