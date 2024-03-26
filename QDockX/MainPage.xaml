@@ -8,29 +8,37 @@
              Background="#303030"             
              x:DataType="data:Data">
     <ContentPage.Resources>
-        <Style x:Key="XLabel" TargetType="Label">
-            <Setter Property="FontAttributes" Value="Bold"/>
+        <Style TargetType="ui:AutoSizeLabel">
             <Setter Property="Margin" Value="3,3,3,3"/>
             <Setter Property="TextColor" Value="#aaaaaa" />
-            <Setter Property="VerticalTextAlignment" Value="Start" />
+            <Setter Property="VerticalTextAlignment" Value="Center" />
+            <Setter Property="Group" Value="None"/>
         </Style>
         <Style TargetType="ui:QButton">
-            <Setter Property="ReleasedBackground" Value="#202020"/>
+            <Setter Property="ReleasedBackground" Value="#181818"/>
             <Setter Property="TextColor" Value="#bbbbbb"/>
             <Setter Property="CornerRadius" Value="10"/>
             <Setter Property="BorderWidth" Value="0.5"/>
-            <Setter Property="BorderColor" Value="#555555"/>
+            <Setter Property="BorderColor" Value="#666666"/>
             <Setter Property="FontAttributes" Value="Bold"/>
-            <Setter Property="PressedBackground" Value="#101010"/>
+            <Setter Property="PressedBackground" Value="#080808"/>
             <Setter Property="Padding" Value="10,10,10,10"/>
             <Setter Property="Margin" Value="3,3,3,3"/>
+            <Setter Property="Group" Value="None"/>
         </Style>
-        <Style TargetType="Entry">
+        <Style TargetType="ui:AutoSizeEntry">
             <Setter Property="FontAttributes" Value="Bold"/>
-            <Setter Property="HorizontalTextAlignment" Value="Start"/>
+            <Setter Property="Margin" Value="0,-3,0,-3"/>
             <Setter Property="TextColor" Value="White"/>
-            <Setter Property="Margin" Value="0,-6,0,0"/>
-            <Setter Property="VerticalTextAlignment" Value="End" />
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="Group" Value="None"/>
+        </Style>
+        <Style TargetType="ui:AutoSizePicker">
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="Margin" Value="0,-3,0,-3"/>
+            <Setter Property="TextColor" Value="White"/>
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="Group" Value="None"/>
         </Style>
         <Style TargetType="ui:Potentiometer">
             <Setter Property="Margin" Value="5,5,5,5"/>
@@ -113,7 +121,7 @@
             <ui:QButton Tag="8" Grid.Row="4" Grid.Column="2" Text="{Binding Button8.Value}" />
             <ui:QButton Tag="9" Grid.Row="4" Grid.Column="3" Text="{Binding Button9.Value}" />
             <ui:QButton Tag="15" Grid.Row="4" Grid.Column="4" Text="{Binding Button15.Value}" />
-            <ui:QButton Tag="16" Grid.Row="4" Grid.Column="5" Text="{Binding Button16.Value}" />
+            <ui:QButton IsEnabled="{Binding AllowPTT.Value}" Opacity="{Binding AllowPTT.Convert[HalfBright]}" Tag="16" Grid.Row="4" Grid.Column="5" Text="{Binding Button16.Value}" />
             <Grid Grid.Row="1" Grid.Column="5" Grid.RowSpan="3">
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -125,7 +133,7 @@
                 </Grid.RowDefinitions>
                 <ui:Potentiometer Grid.Row="0" Value="{Binding Volume.Value, Mode=TwoWay}" />
                 <ui:AutoSizeLabel Grid.Row="1" TextColor="#888888" Text="{Binding AFGainLabel.Value}" HorizontalTextAlignment="Center" VerticalTextAlignment="Start" Padding="0" Margin="0"/>
-                <ui:Potentiometer Grid.Row="3" Gesturing="{Binding AdjustingMic.Value, Mode=TwoWay}" Value="{Binding Boost.Value, Mode=TwoWay}" />
+                <ui:Potentiometer Opacity="{Binding AllowPTT.Convert[HalfBright]}" IsEnabled="{Binding AllowPTT.Value}" Grid.Row="3" Gesturing="{Binding AdjustingMic.Value, Mode=TwoWay}" Value="{Binding Boost.Value, Mode=TwoWay}" />
                 <ui:AutoSizeLabel Grid.Row="4" TextColor="#888888" Text="{Binding MicGainLabel.Value}" HorizontalTextAlignment="Center" VerticalTextAlignment="Start" Padding="0" Margin="0"/>
             </Grid>
         </Grid>
@@ -154,49 +162,64 @@
                 <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
-            <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="0" Grid.Column="0" Text="{Binding QDNHHostLabel.Value}"/>
-            <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="1" Grid.Column="0" Text="{Binding QDNHPortLabel.Value}"/>
-            <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="2" Grid.Column="0" Text="{Binding QDNHPasswordLabel.Value}"/>
-            <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="3" Grid.Column="0" Text="{Binding LCDBackgroundLabel.Value}"/>
-            <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="4" Grid.Column="0" Text="{Binding LCDForegroundLabel.Value}"/>
-            <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="5" Grid.Column="0" Text="{Binding User1Label.Value}"/>
-            <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="6" Grid.Column="0" Text="{Binding User2Label.Value}"/>
-            <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="7" Grid.Column="0" Text="{Binding LatencyLabel.Value}"/>
-            <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="8" Grid.Column="0" Text="{Binding LanguageLabel.Value}"/>
-            <ui:AutoSizeLabel Style="{StaticResource XLabel}" TextColor="#888888" x:Name="LabelSample" Grid.Row="14" FontAttributes="None" Grid.Column="0" Text="QDockX 1.3 nicsure"/>
+            <ui:AutoSizeLabel Group="Settings" Grid.Row="0" Grid.Column="0" Text="{Binding QDNHPresetsLabel.Value}"/>
+            <ui:AutoSizeLabel Group="Settings" Grid.Row="1" Grid.Column="0" Text="{Binding QDNHHostLabel.Value}"/>
+            <ui:AutoSizeLabel Group="Settings" Grid.Row="2" Grid.Column="0" Text="{Binding QDNHPortLabel.Value}"/>
+            <ui:AutoSizeLabel Group="Settings" Grid.Row="3" Grid.Column="0" Text="{Binding QDNHPasswordLabel.Value}"/>
+            <ui:AutoSizeLabel Group="Settings" Grid.Row="4" Grid.Column="0" Text="{Binding LCDBackgroundLabel.Value}"/>
+            <ui:AutoSizeLabel Group="Settings" Grid.Row="5" Grid.Column="0" Text="{Binding LCDForegroundLabel.Value}"/>
+            <ui:AutoSizeLabel Group="Settings" Grid.Row="6" Grid.Column="0" Text="{Binding User1Label.Value}"/>
+            <ui:AutoSizeLabel Group="Settings" Grid.Row="7" Grid.Column="0" Text="{Binding User2Label.Value}"/>
+            <ui:AutoSizeLabel Group="Settings" Grid.Row="8" Grid.Column="0" Text="{Binding LatencyLabel.Value}"/>
+            <ui:AutoSizeLabel Group="Settings" Grid.Row="9" Grid.Column="0" Text="{Binding LanguageLabel.Value}"/>
+            <ui:AutoSizeLabel Group="Settings" Grid.Row="10" Grid.Column="0" Text="{Binding KeepScreenOnLabel.Value}"/>
+            <ui:AutoSizeLabel Group="None" TextColor="#888888" x:Name="LabelSample" Grid.Row="999" FontAttributes="None" Grid.Column="0" Text="QDockX 1.6 nicsure"/>
 
-            <Entry Grid.Row="0" Grid.Column="1" Text="{Binding Host.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
-            <Entry Grid.Row="1" Grid.Column="1" Text="{Binding Port.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
-            <Entry Grid.Row="2" Grid.Column="1" IsPassword="True" Text="{Binding Password.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
-            <Grid Grid.Row="3" Grid.Column="1">
+            <Grid Grid.Row="0" Grid.Column="1">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Entry Text="{Binding LCDBackgroundEdit.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
-                <ui:QButton Tag="EditBGCol" Padding="0,0,0,0" Margin="4,4,4,4" BorderColor="#777777" CornerRadius="20" Grid.Column="1" ReleasedBackground="{Binding LCDBackground.Value}"/>
+                <ui:AutoSizePicker ItemsSource="{Binding PresetNames}" SelectedItem="{Binding Preset.Value}" />
+                <ui:QButton Tag="AddPreset" Grid.Column="1" Text="＋"/>
+                <ui:QButton Tag="UpdatePreset" Grid.Column="2" Text="⟳"/>
+                <ui:QButton Tag="DeletePreset" Grid.Column="3" Text="🗑"/>
             </Grid>
+            <ui:AutoSizeEntry Grid.Row="1" Grid.Column="1" Text="{Binding Host.Value}" />
+            <ui:AutoSizeEntry Grid.Row="2" Grid.Column="1" Text="{Binding Port.Value}" />
+            <ui:AutoSizeEntry Grid.Row="3" Grid.Column="1" IsPassword="True" Text="{Binding Password.Value}" />
             <Grid Grid.Row="4" Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <Entry Text="{Binding LCDForegroundEdit.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
+                <ui:AutoSizeEntry Text="{Binding LCDBackgroundEdit.Value}" />
+                <ui:QButton Tag="EditBGCol" Padding="0,0,0,0" Margin="4,4,4,4" BorderColor="#777777" CornerRadius="20" Grid.Column="1" ReleasedBackground="{Binding LCDBackground.Value}"/>
+            </Grid>
+            <Grid Grid.Row="5" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <ui:AutoSizeEntry Text="{Binding LCDForegroundEdit.Value}" />
                 <ui:QButton Tag="EditFGCol" Padding="0,0,0,0" Margin="4,4,4,4" BorderColor="#777777" CornerRadius="20" Grid.Column="1" ReleasedBackground="{Binding LCDForeground.Value}"/>
             </Grid>
-            <Entry Grid.Row="5" Grid.Column="1" Text="{Binding Button18.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
-            <Entry Grid.Row="6" Grid.Column="1" Text="{Binding Button17.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
-            <Entry Grid.Row="7" Grid.Column="1" Text="{Binding Latency.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
-            <Grid Grid.Row="8" Grid.Column="1">
+            <ui:AutoSizeEntry Grid.Row="6" Grid.Column="1" Text="{Binding Button18.Value}" />
+            <ui:AutoSizeEntry Grid.Row="7" Grid.Column="1" Text="{Binding Button17.Value}" />
+            <ui:AutoSizeEntry Grid.Row="8" Grid.Column="1" Text="{Binding Latency.Value}" />
+            <Grid Grid.Row="9" Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Picker VerticalTextAlignment="Start" FontAttributes="Bold" TextColor="White" ItemsSource="{Binding Languages}" SelectedItem="{Binding Language.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}"/>
+                <ui:AutoSizePicker ItemsSource="{Binding Languages}" SelectedItem="{Binding Language.Value}" />
                 <ui:QButton Tag="EditLang" Grid.Column="1" Text="{Binding EditLabel.Value}"/>
             </Grid>
-            <Grid Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3">
+            <Grid Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
@@ -208,20 +231,21 @@
                     <RowDefinition/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="0" Grid.Column="0" Text="{Binding FontLabel.Value}"/>
-                <Label Margin="3,3,20,3" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="1" Grid.Column="0" Text="{Binding SizeLabel.Value}" HorizontalTextAlignment="End" />
-                <Label Margin="3,3,20,3" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="2" Grid.Column="0" Text="{Binding OffsetLabel.Value}" HorizontalTextAlignment="End" />
-                <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="0" Grid.Column="1" Text="{Binding SmallLabel.Value}" VerticalTextAlignment="End" />
-                <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="0" Grid.Column="2" Text="{Binding MediumLabel.Value}" VerticalTextAlignment="End" />
-                <Label FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" Style="{StaticResource XLabel}" Grid.Row="0" Grid.Column="3" Text="{Binding LargeLabel.Value}" VerticalTextAlignment="End" />
-                <Entry Grid.Row="1" Grid.Column="1" Text="{Binding SmallWidth.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
-                <Entry Grid.Row="2" Grid.Column="1" Text="{Binding SmallHeight.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
-                <Entry Grid.Row="1" Grid.Column="2" Text="{Binding MediumWidth.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
-                <Entry Grid.Row="2" Grid.Column="2" Text="{Binding MediumHeight.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
-                <Entry Grid.Row="1" Grid.Column="3" Text="{Binding LargeWidth.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
-                <Entry Grid.Row="2" Grid.Column="3" Text="{Binding LargeHeight.Value}" FontSize="{Binding Source={x:Reference LabelSample}, Path=FontSize}" />
+                <ui:AutoSizeLabel Group="Settings" Grid.Row="0" Grid.Column="0" Text="{Binding FontLabel.Value}" VerticalTextAlignment="End"/>
+                <ui:AutoSizeLabel Group="Settings" Grid.Row="1" Grid.Column="0" Text="{Binding SizeLabel.Value}" HorizontalTextAlignment="End" />
+                <ui:AutoSizeLabel Group="Settings" Grid.Row="2" Grid.Column="0" Text="{Binding OffsetLabel.Value}" HorizontalTextAlignment="End" />
+                <ui:AutoSizeLabel Group="Settings" Grid.Row="0" Grid.Column="1" Text="{Binding SmallLabel.Value}" VerticalTextAlignment="End" />
+                <ui:AutoSizeLabel Group="Settings" Grid.Row="0" Grid.Column="2" Text="{Binding MediumLabel.Value}" VerticalTextAlignment="End" />
+                <ui:AutoSizeLabel Group="Settings" Grid.Row="0" Grid.Column="3" Text="{Binding LargeLabel.Value}" VerticalTextAlignment="End" />
+                <ui:AutoSizeEntry Grid.Row="1" Grid.Column="1" Text="{Binding SmallWidth.Value}" />
+                <ui:AutoSizeEntry Grid.Row="2" Grid.Column="1" Text="{Binding SmallHeight.Value}" />
+                <ui:AutoSizeEntry Grid.Row="1" Grid.Column="2" Text="{Binding MediumWidth.Value}" />
+                <ui:AutoSizeEntry Grid.Row="2" Grid.Column="2" Text="{Binding MediumHeight.Value}" />
+                <ui:AutoSizeEntry Grid.Row="1" Grid.Column="3" Text="{Binding LargeWidth.Value}" />
+                <ui:AutoSizeEntry Grid.Row="2" Grid.Column="3" Text="{Binding LargeHeight.Value}" />
             </Grid>
-            <Grid Grid.Row="14" Grid.Column="1">
+            <CheckBox HorizontalOptions="Start" Grid.Row="10" Grid.Column="1" IsChecked="{Binding KeepScreenOn.Value}"/>
+            <Grid Grid.Row="999" Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
@@ -308,6 +332,31 @@
             <BoxView Margin="5,5,10,5" Grid.ColumnSpan="2" Grid.RowSpan="2" CornerRadius="20" Grid.Row="6" Grid.Column="1" Color="{Binding ColEditColor.Value}"/>
             <ui:QButton Tag="{Binding ColEditCancelAction.Value}" Text="❌" Grid.Row="6" Grid.Column="3"/>
             <ui:QButton Tag="{Binding ColEditOKAction.Value}" TextColor="LimeGreen" Text="✔️" Grid.Row="7" Grid.Column="3"/>
+        </Grid>
+
+
+
+        <Grid IsVisible="{Binding Page.Convert[EqStringInput]}" Margin="3,3,3,3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="0.25*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="0.25*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="0.25*"/>
+                <RowDefinition />
+                <RowDefinition Height="0.25*"/>
+                <RowDefinition Height="0.5*"/>
+                <RowDefinition Height="0.25*"/>
+                <RowDefinition />                
+                <RowDefinition Height="0.25*"/>
+            </Grid.RowDefinitions>
+            <ui:AutoSizeLabel HorizontalTextAlignment="Center" Text="{Binding StringInputCaption.Value}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"/>
+            <ui:AutoSizeEntry BackgroundColor="Black" Text="{Binding StringInput.Value}" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="3"/>
+            <ui:QButton Tag="{Binding StringInputCancelAction.Value}" Grid.Row="5" Grid.Column="1" Text="❌"/>
+            <ui:QButton IsEnabled="{Binding StringInput.Convert[NotEmpty]}" Opacity="{Binding StringInput.Convert[HalfBrightES]}" Tag="{Binding StringInputOkayAction.Value}" Grid.Row="5" Grid.Column="3" Text="✔️"/>
         </Grid>
 
 

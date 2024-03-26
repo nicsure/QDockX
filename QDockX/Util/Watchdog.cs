@@ -38,5 +38,18 @@ namespace QDockX.Util
         {
             set { lock (tasks) { tasks.Add(value); } }
         }
+
+        public static Task Add(Task task)
+        {
+            lock (tasks) { tasks.Add(task); }
+            return task;
+        }
+
+        public static Task Delay(int millis)
+        {
+            Task task;
+            lock(tasks) { tasks.Add(task = Task.Delay(millis)); }
+            return task;
+        }
     }
 }

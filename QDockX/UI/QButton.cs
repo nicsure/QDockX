@@ -11,12 +11,10 @@ using System.Threading.Tasks;
 
 namespace QDockX.UI
 {
-    public class QButton : Button
+    public class QButton : Button, IAutoFontSizable
     {
         public QButton() : base() 
         {
-            MeasureInvalidated += QButton_MeasureInvalidated;
-            SizeChanged += QButton_MeasureInvalidated;
             Pressed += QButton_Pressed;
             Released += QButton_Released;
             Unfocused += QButton_Released;            
@@ -46,26 +44,15 @@ namespace QDockX.UI
                 MessageHub.Send(Msg._pressed, tag);
         }
 
-        private static void QButton_MeasureInvalidated(object sender, EventArgs e)
+        public string Group
         {
-            if (sender is QButton button && button.AutoSize && button.Width > 0 && button.Height > 0 && button.Text != null && button.Text.Length > 0)
-            {
-                double width = button.Width;
-                double height = button.Height;
-                button.MeasureInvalidated -= QButton_MeasureInvalidated;
-                Size requiredSize;
-                button.FontSize = 0.1;
-                do
-                {
-                    button.FontSize++;
-                    requiredSize = button.Measure(double.PositiveInfinity, double.PositiveInfinity).Request;
-                }
-                while (button.FontSize < 1000 && requiredSize.Width < width && requiredSize.Height < height);
-                button.FontSize--;
-                button.MeasureInvalidated += QButton_MeasureInvalidated;
-                button.MasterFontSize = button.FontSize;
-            }
+            get { return (string)GetValue(GroupProperty); }
+            set { SetValue(GroupProperty, value); }
         }
+        public static readonly BindableProperty GroupProperty =
+            BindableProperty.Create(nameof(Group), typeof(string), typeof(QButton),
+                defaultValue: null,
+                propertyChanged: (b, o, n) => IAutoFontSizable.Register(b, o, n));
 
         public Brush ReleasedBackground
         {
@@ -92,14 +79,6 @@ namespace QDockX.UI
         }
         public static readonly BindableProperty TagProperty =
             BindableProperty.Create(nameof(Tag), typeof(object), typeof(QButton), null);
-
-        public double MasterFontSize
-        {
-            get { return (double)GetValue(MasterFontSizeProperty); }
-            set { SetValue(MasterFontSizeProperty, value); }
-        }
-        public static readonly BindableProperty MasterFontSizeProperty =
-            BindableProperty.Create(nameof(MasterFontSize), typeof(double), typeof(QButton), 10.0);
 
         public bool AutoSize
         {

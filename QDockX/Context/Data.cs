@@ -1,5 +1,6 @@
 ﻿using QDockX.Buttons;
 using QDockX.Language;
+using QDockX.Network;
 using QDockX.Util;
 using System;
 using System.Collections.Generic;
@@ -54,8 +55,20 @@ namespace QDockX.Context
         public ViewModel<double> ColEditGreen { get; }
         public ViewModel<double> ColEditBlue { get; }
         public ViewModel<Color> ColEditColor { get; } = new("RGBEdit");
+        public ViewModel<bool> KeepScreenOn { get; } = new(false, nameof(KeepScreenOn));
+        public ViewModel<string> StringInputCaption { get; } = new(string.Empty, null);
+        public ViewModel<string> StringInputOkayAction { get; } = new(string.Empty, null);
+        public ViewModel<string> StringInputCancelAction { get; } = new(string.Empty, null);
+        public ViewModel<string> StringInput { get; } = new(string.Empty, null);
+        public ViewModel<bool> AllowPTT { get; } = new(false, null);
+        public ViewModel<string> Presets { get; } = new(string.Empty, nameof(Presets));
+        public ViewModel<string> Preset { get; } = new(string.Empty, nameof(Preset));
 
-
+        public System.Collections.ObjectModel.ObservableCollection<string> PresetNames
+        {
+            get => ConnectionPreset.PresetNames;
+            set => OnPropertyChanged(nameof(PresetNames));
+        }
 
         public System.Collections.ObjectModel.ObservableCollection<string> Languages
         {
@@ -84,6 +97,7 @@ namespace QDockX.Context
         public ViewModel<string> QDNHHostLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> QDNHPortLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> QDNHPasswordLabel { get; private set; } = new(string.Empty, null);
+        public ViewModel<string> QDNHPresetsLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> LCDBackgroundLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> LCDForegroundLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> ExitLabel { get; private set; } = new(string.Empty, null);
@@ -107,6 +121,7 @@ namespace QDockX.Context
         public ViewModel<string> YesLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> NoLabel { get; private set; } = new(string.Empty, null);
         public ViewModel<string> FactoryLabel { get; private set; } = new(string.Empty, null);
+        public ViewModel<string> KeepScreenOnLabel { get; private set; } = new(string.Empty, null);
 
         public Data()
         {
@@ -115,12 +130,23 @@ namespace QDockX.Context
             ColEditGreen = new(0.0, null, ColEditColor);
             ColEditBlue = new(0.0, null, ColEditColor);
             InitLanguageModels();
-            Latency.PropertyChanged += (object sender, PropertyChangedEventArgs e) => Status.LatencyChanged = true;
-            Language.PropertyChanged += (object sender, PropertyChangedEventArgs e) => InitLanguageModels();
+            Latency.PropertyChanged += (s, e) => Status.LatencyChanged = true;
+            Language.PropertyChanged += (s, e) => InitLanguageModels();
             LCDBackgroundEdit.Value = LCDBackground.Value.ToArgbHex();
             LCDForegroundEdit.Value = LCDForeground.Value.ToArgbHex();
-            LCDBackgroundEdit.PropertyChanged += (object sender, PropertyChangedEventArgs e) => LCDColorEdit(LCDBackgroundEdit, LCDBackground);
-            LCDForegroundEdit.PropertyChanged += (object sender, PropertyChangedEventArgs e) => LCDColorEdit(LCDForegroundEdit, LCDForeground);
+            LCDBackgroundEdit.PropertyChanged += (s, e) => LCDColorEdit(LCDBackgroundEdit, LCDBackground);
+            LCDForegroundEdit.PropertyChanged += (s, e) => LCDColorEdit(LCDForegroundEdit, LCDForeground);
+            KeepScreenOn.PropertyChanged += (s, e) => MessageHub.Send(Msg._keepscreenon, KeepScreenOn.Value);
+            Preset.PropertyChanged += (s, e) => 
+            {
+                var preset = ConnectionPreset.Get(Preset.Value);
+                if (preset != null) 
+                {
+                    Password.Value = preset.Password;
+                    Port.Value = preset.Port;
+                    Host.Value = preset.Host;
+                }
+            };
         }
 
         private static void LCDColorEdit(ViewModel<string> edit, ViewModel<Color> col)
@@ -156,6 +182,7 @@ namespace QDockX.Context
             QDNHHostLabel.Value = Lang.QDNHHost;
             QDNHPortLabel.Value = Lang.QDNHPort;
             QDNHPasswordLabel.Value = Lang.QDNHPassword;
+            QDNHPresetsLabel.Value = Lang.QDNHPresets;
             LCDBackgroundLabel.Value = Lang.LCDBackground;
             LCDForegroundLabel.Value = Lang.LCDForeground;
             ExitLabel.Value = Lang.Exit;
@@ -179,6 +206,7 @@ namespace QDockX.Context
             NoLabel.Value = Lang.No;
             BackLabel.Value = Lang.Back;
             FactoryLabel.Value = Lang.Factory;
+            KeepScreenOnLabel.Value = Lang.KeepScreenOn;
         }
     }
 

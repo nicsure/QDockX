@@ -15,6 +15,10 @@ namespace QDockX.Context
         {
             switch (key)
             {
+                case "Empty": return value == null || string.Empty.Equals(value.ToString().Trim());
+                case "NotEmpty": return !string.Empty.Equals(value.ToString().Trim());
+                case "HalfBrightES": return string.Empty.Equals(value) ? 0.35 : 1.0;
+                case "HalfBright": return true.Equals(value) ? 1.0 : 0.35;
                 case "RGBEdit": return new Color(
                         (float)Data.Instance.ColEditRed.Value,
                         (float)Data.Instance.ColEditGreen.Value,

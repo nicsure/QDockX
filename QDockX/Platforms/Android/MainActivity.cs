@@ -4,6 +4,7 @@ using Android.Hardware;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
+using QDockX.Context;
 using QDockX.Debug;
 
 namespace QDockX;
@@ -16,7 +17,18 @@ public class MainActivity : MauiAppCompatActivity
     protected override void OnCreate(Bundle savedInstanceState)
     {
         base.OnCreate(savedInstanceState);
-        ocl = new(this);        
+        ocl = new(this);
+        MessageHub.Message += MessageHub_Message;
+    }
+
+    private void MessageHub_Message(object sender, MessageEventArgs e)
+    {
+        switch (e.Message)
+        {
+            case var n when Msg._keepscreenon.Equals(n):
+                DeviceDisplay.KeepScreenOn = e.Parameter.Equals(true);
+                break;
+        }
     }
 
     protected override void OnPause()

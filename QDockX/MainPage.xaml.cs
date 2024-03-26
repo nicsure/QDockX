@@ -1,5 +1,6 @@
 ﻿using QDockX.Buttons;
 using QDockX.Context;
+using QDockX.Debug;
 using QDockX.Network;
 using QDockX.Radio;
 using QDockX.Sound;
@@ -14,23 +15,43 @@ public partial class MainPage : ContentPage
 
 	public MainPage()
 	{
+        Shared.Page = this;
         BindingContext = Data.Instance;
-		InitializeComponent();
+        ConnectionPreset.Populate();
+        Watchdog.Watch = GetPermission();
+        InitializeComponent();
         Shared.LanguageEditor = LangEditor;
         Watchdog.Init();
-        ButtonProcesor.Init();
+        ButtonProcessor.Init();
         Playback.Init();
         Capture.Init();
         QDNH.Init();
         Serial.Init();
     }
 
+    private static async Task GetPermission()
+    {
+        try
+        {
+            using var task = Permissions.RequestAsync<Permissions.Microphone>();
+            var status = await task;
+            if (status != PermissionStatus.Granted)
+            {
+                using var task2 = Shared.Alert("Alert", "Without granting permission for the microphone you will not be able to transmit.", "OK");
+                await task2;
+            }
+            else
+                Data.Instance.AllowPTT.Value = true;
+        }
+        catch(Exception ex) { DebugLog.Exception(ex); }
+    }
+
     protected override async void OnDisappearing()
     {
         Shared.LanguageEditor = null;
-        IChildVM.Save();
-        using var delay = Task.Delay(200);
-        await delay;
+        ConnectionPreset.Serialize();
+        IVM.Save();
+        await Watchdog.Delay(200);
         base.OnDisappearing();
     }
 
@@ -38,6 +59,7 @@ public partial class MainPage : ContentPage
     {
         base.OnAppearing();
         Shared.LanguageEditor = LangEditor;
+        MessageHub.Send(Msg._keepscreenon, Data.Instance.KeepScreenOn.Value);
     }
 
     protected override bool OnBackButtonPressed()
@@ -54,6 +76,9 @@ public partial class MainPage : ContentPage
                 return true;
             case var n when n == Msg._coloredit:
                 MessageHub.Send(Msg._pressed, Data.Instance.ColEditCancelAction.Value);
+                return true;
+            case var n when n == Msg._stringinput:
+                MessageHub.Send(Msg._pressed, Data.Instance.StringInputCancelAction.Value);
                 return true;
             default:
                 MessageHub.Send(Msg._pressed, Msg._main);

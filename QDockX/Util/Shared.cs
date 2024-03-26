@@ -9,6 +9,7 @@ namespace QDockX.Util
     public static class Shared
     {
         public static Editor LanguageEditor { get; set; } = null;
+        public static Page Page { get; set; } = null;
 
         public static string LinesToString(this List<string> lines)
         {
@@ -26,6 +27,12 @@ namespace QDockX.Util
         public static void Dispatch(Action action)
         {
             (_ = LanguageEditor)?.Dispatcher.Dispatch(action);
+        }
+
+        public static async Task Alert(string title, string message, string button)
+        {
+            using var task = Page.DisplayAlert(title, message, button);
+            await task;
         }
     }
 }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace QDockX.UI
 {
-    public class AutoSizeLabel : Label, IAutoFontSizable
+    public class AutoSizeEntry : Entry, IAutoFontSizable
     {
-        public AutoSizeLabel() : base() { }
+        public AutoSizeEntry() : base() { }
 
         public string Group
         {
@@ -16,7 +16,7 @@ namespace QDockX.UI
             set { SetValue(GroupProperty, value); }
         }
         public static readonly BindableProperty GroupProperty =
-            BindableProperty.Create(nameof(Group), typeof(string), typeof(AutoSizeLabel),
+            BindableProperty.Create(nameof(Group), typeof(string), typeof(AutoSizeEntry),
                 defaultValue: null,
                 propertyChanged: (b, o, n) => IAutoFontSizable.Register(b, o, n));
     }

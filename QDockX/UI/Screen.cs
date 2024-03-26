@@ -58,7 +58,7 @@ namespace QDockX.UI
         private async Task DelayedRemoveLine(int line)
         {
             var array = lines[line].ToArray();
-            await (Watchdog.Watch = Task.Delay(100));
+            await Watchdog.Delay(100);
             foreach(Label label in array)
             {
                 grid.Remove(label);

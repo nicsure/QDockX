@@ -10,8 +10,8 @@ namespace QDockX.Context
 {
     public class Conversion
     {
-        private readonly IChildVM VM;
-        public Conversion(IChildVM vm) => VM = vm;
+        private readonly IVM VM;
+        public Conversion(IVM vm) => VM = vm;
         public object this[string key]
         {
             get => Converter.Convert(key, VM.Get());
@@ -27,12 +27,12 @@ namespace QDockX.Context
         public abstract object PerformConvert(string key, object value);
     }
 
-    public class ViewModel<T> : IChildVM, INotifyPropertyChanged
+    public class ViewModel<T> : IVM, INotifyPropertyChanged
     {
         private static readonly PropertyChangedEventArgs eventArgs1 = new(nameof(Value));
         private static readonly PropertyChangedEventArgs eventArgs2 = new(nameof(Convert));
         public event PropertyChangedEventHandler PropertyChanged;
-        private readonly IChildVM[] children = Array.Empty<IChildVM>();
+        private readonly IVM[] children = Array.Empty<IVM>();
         private readonly string config = null;
         private readonly string autoConvert = null;
         private Conversion conversion = null;
@@ -72,9 +72,9 @@ namespace QDockX.Context
             this.autoConvert = autoConvert;
         }
 
-        public ViewModel(T initialValue, string config, params IChildVM[] children)
+        public ViewModel(T initialValue, string config, params IVM[] children)
         {
-            val = IChildVM.ConfigFile.Read(config, initialValue);
+            val = IVM.ConfigFile.Read(config, initialValue);
             this.config = config;
             this.children = children;
         }
@@ -94,11 +94,11 @@ namespace QDockX.Context
                 foreach (var child in children)
                     child.OnChange();
             }
-            IChildVM.ConfigFile.Write(config, val);
+            IVM.ConfigFile.Write(config, val);
         }
     }
 
-    public interface IChildVM
+    public interface IVM
     {
         public static ConfigFile ConfigFile { get; } = new("main");
         public static void Clear() => ConfigFile.Delete();

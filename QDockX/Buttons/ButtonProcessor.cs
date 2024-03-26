@@ -1,5 +1,6 @@
 ﻿using QDockX.Context;
 using QDockX.Language;
+using QDockX.Network;
 using QDockX.Util;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace QDockX.Buttons
 {
-    public static class ButtonProcesor
+    public static class ButtonProcessor
     {
         private static int keys = 0;
         private static ViewModel<Color> editedColor = null;
@@ -30,13 +31,14 @@ namespace QDockX.Buttons
                             case var n when Msg._main.Equals(n):
                                 if (Data.Instance.Page.Value.Equals(Msg._settings))
                                 {
-                                    IChildVM.Save();
+                                    ConnectionPreset.Serialize();
+                                    IVM.Save();
                                     if(Status.LatencyChanged)
                                     {
                                         Status.LatencyChanged = false;
                                         Data.Instance.NoAction.Value = Msg._main;
                                         Data.Instance.YesAction.Value = Msg._exit;
-                                        Data.Instance.YesNoQuestion.Value = Lang.ConfirmExit.Replace(@"\n", "\r\n");
+                                        Data.Instance.YesNoQuestion.Value = Lang.ConfirmExit.Form();
                                         Data.Instance.Page.Value = Msg._yesno;
                                         break;
                                     }
@@ -66,17 +68,17 @@ namespace QDockX.Buttons
                             case var n when Msg._factoryask.Equals(n):
                                 Data.Instance.NoAction.Value = Msg._settings;
                                 Data.Instance.YesAction.Value = Msg._factory;
-                                Data.Instance.YesNoQuestion.Value = Lang.ConfirmFactory.Replace(@"\n", "\r\n");
+                                Data.Instance.YesNoQuestion.Value = Lang.ConfirmFactory.Form();
                                 Data.Instance.Page.Value = Msg._yesno;
                                 break;
                             case var n when Msg._factory.Equals(n):
-                                IChildVM.Clear();
+                                IVM.Clear();
                                 Application.Current.Quit();
                                 break;
                             case var n when Msg._deletelangask.Equals(n):
                                 Data.Instance.NoAction.Value = Msg._editlangreturn;
                                 Data.Instance.YesAction.Value = Msg._deletelang;
-                                Data.Instance.YesNoQuestion.Value = $"{Lang.ConfirmDelLang.Replace(@"\n","\r\n")} {Data.Instance.LanguageDesignator.Value}";
+                                Data.Instance.YesNoQuestion.Value = $"{Lang.ConfirmDelLang.Form()} {Data.Instance.LanguageDesignator.Value}";
                                 Data.Instance.Page.Value = Msg._yesno;
                                 break;
                             case var n when Msg._deletelang.Equals(n):
@@ -94,6 +96,54 @@ namespace QDockX.Buttons
                             case var n when Msg._coloreditok.Equals(n):
                                 if(editedColor != null)
                                    editedColor.Value = Data.Instance.ColEditColor.Value;
+                                Data.Instance.Page.Value = Msg._settings;
+                                break;
+                            case var n when Msg._addpreset.Equals(n):
+                                Data.Instance.StringInputCaption.Value = Lang.EnterPresetName.Form();
+                                Data.Instance.StringInput.Value = string.Empty;
+                                Data.Instance.StringInputCancelAction.Value = Msg._settings;
+                                Data.Instance.StringInputOkayAction.Value = Msg._presetokay;
+                                Data.Instance.Page.Value = Msg._stringinput;
+                                break;
+                            case var n when Msg._presetokay.Equals(n):
+                                string presetName = Data.Instance.StringInput.Value.Trim();
+                                if (presetName.Length > 0)
+                                {
+                                    _ = new ConnectionPreset(
+                                        Data.Instance.Host.Value,
+                                        Data.Instance.Port.Value,
+                                        Data.Instance.Password.Value,
+                                        presetName
+                                    );
+                                    Data.Instance.Preset.Value = presetName;
+                                    Data.Instance.Page.Value = Msg._settings;
+                                }
+                                break;
+                            case var n when Msg._updatepreset.Equals(n):
+                                if (Data.Instance.Preset.Value != null && Data.Instance.Preset.Value.Length > 0)
+                                {
+                                    _ = new ConnectionPreset(
+                                        Data.Instance.Host.Value,
+                                        Data.Instance.Port.Value,
+                                        Data.Instance.Password.Value,
+                                        Data.Instance.Preset.Value
+                                    );
+                                    Watchdog.Watch = Shared.Alert("Info", Lang.UpdatePresetConfirm.Form(Data.Instance.Preset.Value), "OK");
+                                }
+                                break;
+                            case var n when Msg._deletepreset.Equals(n):
+                                if (Data.Instance.Preset.Value != null && Data.Instance.Preset.Value.Length > 0)
+                                {
+                                    Data.Instance.NoAction.Value = Msg._settings;
+                                    Data.Instance.YesAction.Value = Msg._deletepresetok;
+                                    Data.Instance.YesNoQuestion.Value =
+                                        $"{Lang.DeletePresetConfirm.Form(Data.Instance.Preset.Value)}";
+                                    Data.Instance.Page.Value = Msg._yesno;
+                                }
+                                break;
+                            case var n when Msg._deletepresetok.Equals(n):
+                                ConnectionPreset.Delete(Data.Instance.Preset.Value);
+                                Data.Instance.Preset.Value = string.Empty;
                                 Data.Instance.Page.Value = Msg._settings;
                                 break;
                             case var n when n is string s && int.TryParse(s, out int i):

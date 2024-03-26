@@ -34,22 +34,33 @@ namespace QDockX.Sound
                 bufferSize &= 0x7ffffffc;
                 bufferSize += 4;
             }
-            capture = new(AudioSource.Mic, 44100, ChannelIn.Mono, Android.Media.Encoding.Pcm16bit, bufferSize);
-            if(capture.State == State.Initialized)
-                Task.Run(Capture);            
+            Task.Run(Capture);            
         }
 
         private void Capture()
         {
-            capture.StartRecording();
             while (true)
             {
-                byte[] b = new byte[bufferSize];
-                int br = capture.Read(b, 0, b.Length);
-                SoundProcessor.HalfRateAndAmplifyPCM16(b, br, boost);
-                MessageHub.Send(Msg._audioout, (b, br >> 1));
+                Thread.Sleep(1000);
+                try { capture = new(AudioSource.Mic, 44100, ChannelIn.Mono, Android.Media.Encoding.Pcm16bit, bufferSize); }
+                catch (Exception ex) { DebugLog.Exception(ex); }
+                using (capture)
+                {
+                    if (capture != null && capture.State == State.Initialized)
+                    {
+                        try { capture.StartRecording(); } catch (Exception ex) { DebugLog.Exception(ex); continue; }
+                        while(true)
+                        {
+                            byte[] b = new byte[bufferSize];
+                            int br = capture.Read(b, 0, b.Length);
+                            if (br <= 0) break;
+                            SoundProcessor.HalfRateAndAmplifyPCM16(b, br, boost);
+                            MessageHub.Send(Msg._audioout, (b, br >> 1));
+                        }
+                    }
+                    try { capture?.Stop(); } catch (Exception ex) { DebugLog.Exception(ex); continue; }
+                }
             }
         }
-
     }
 }

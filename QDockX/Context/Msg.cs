@@ -10,6 +10,8 @@ namespace QDockX.Context
         public static readonly string _settings = "Settings";
         public static readonly string _main = "Main";
         public static readonly string _language = "Language";
+        public static readonly string _stringinput = "StringInput";
+        public static readonly string _presetokay = "PresetOkay";
         public static readonly string _factory = "Factory";
         public static readonly string _factoryask = "FactoryAsk";
         public static readonly string _yesno = "YesNo";
@@ -31,6 +33,12 @@ namespace QDockX.Context
         public static readonly string _audioout = "AudioOut";
         public static readonly string _latencywarn = "LatencyWarn";
         public static readonly string _exit = "Exit";
+        public static readonly string _keepscreenon = "KeepScreenOn";
+        public static readonly string _addpreset = "AddPreset";
+        public static readonly string _updatepreset = "UpdatePreset";
+        public static readonly string _deletepreset = "DeletePreset";
+        public static readonly string _deletepresetok = "DeletePresetOK";
+
 
     }
 }

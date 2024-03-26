@@ -14,10 +14,12 @@ namespace QDockX.Language
     public static class Lang
     {        
         public static string NonCrititalExp { get; set; } = "Non Critital Exception";
+        public static string UnsupportedExp { get; set; } = "Element FontSize not supported";
         public static string InvalidConv { get; set; } = "Invalid Conversion Key";
         public static string QDNHHost { get; set; } = "QDNH Host";
         public static string QDNHPort { get; set; } = "QDNH Port";
         public static string QDNHPassword { get; set; } = "QDNH Password";
+        public static string QDNHPresets { get; set; } = "QDNH Preset";
         public static string LCDBackground { get; set; } = "LCD Background";
         public static string LCDForeground { get; set; } = "LCD Foreground";
         public static string User1 { get; set; } = "User Button 1";
@@ -44,6 +46,11 @@ namespace QDockX.Language
         public static string ConfirmDelLang { get; set; } = @"Are you sure you wish\nto delete language:";
         public static string ConfirmFactory { get; set; } = @"ARE YOU SURE YOU WANT\nTO RESTORE DEFAULT SETTINGS?";
         public static string ConfirmExit { get; set; } = @"Changing the audio latency\nrequires the app be restarted.\nDo you wish to exit now?";
+        public static string KeepScreenOn { get; set; } = "Keep Screen On";
+        public static string EnterPresetName { get; set; } = @"Enter the name of the\nnew QDNH connection preset.";
+        public static string UpdatePresetConfirm { get; set; } = @"Preset '%' has been updated.";
+        public static string DeletePresetConfirm { get; set; } = @"Are you sure you want to\ndelete QDNH preset '%'?.";
+
 
         public static string Button0 { get; set; } = "0";
         public static string Button1 { get; set; } = "1";
@@ -171,6 +178,8 @@ namespace QDockX.Language
 
         public static string LangFile(this string language) => $"{language.ToLower()}.lang";
 
+        public static string Form(this string value) => value.Replace(@"\n", "\r\n");
+        public static string Form(this string value, string prm) => value.Replace(@"\n", "\r\n").Replace("%", prm);
 
     }
 }
